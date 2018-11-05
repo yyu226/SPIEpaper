@@ -1,0 +1,263 @@
+\typeout{Document Style Option `SPIE proceedings style Version 0.91'.}
+%
+% Prepared by Rick Zaccone  on 6/3/91.
+% Modified by Adrian F Clark  on 11-Jan-1992.
+% Modified by Ken Hanson   April, 1995
+%
+% Usage:
+% \documentstyle[spie]{article}
+%
+% The user needs to make a few adjustments manually:
+%
+% 1. Section titles should be in upper case.
+% 2. Title, subsection, subsubsection, etc. should be in lower case except
+%    for the first letter and proper nouns or acrynyms.
+% 3. Format authors as follows
+%    \author{author1 \\[12pt]
+%            affiliation\\
+%            affiliation\\[12pt]
+%            author2 \\[12pt]
+%            affiliation\\
+%            affiliation\\[12pt]}
+%
+% 4. No date: use \date{}   %%not needed now??
+% --------------------------------------------------------------------
+
+\if0\@ptsize\typeout{ten point}\fi
+\if1\@ptsize\typeout{eleven point}\fi
+\if2\@ptsize\typeout{twelve point}\fi
+
+% Page format
+\oddsidemargin -.25in \evensidemargin -.25in \topmargin .05in
+\textheight 8.8in
+\textwidth 7in   %6.8
+\headheight 0in \headsep 0in     %  avoid extra space for header
+\pagestyle{empty}     %  no page numbers is default
+\parskip 1ex plus 1ex minus 0.3ex   % spacing between paragraphs
+\date{}          %  avoid date
+
+%  Floats - figures and tables
+\floatsep 0.9ex plus 0.3ex minus 0.6ex
+\textfloatsep 4ex plus 3ex minus 1.5ex
+\renewcommand{\textfraction}{0.10}
+\renewcommand{\floatpagefraction}{0.60}
+\renewcommand{\topfraction}{0.90}
+\renewcommand{\bottomfraction}{0.90}
+\setcounter{totalnumber}{3}
+\setcounter{topnumber}{2}
+\setcounter{bottomnumber}{2}
+
+%  special definitions - useful definitions - needed??
+\def\skiplinehalf{\medskip\\}
+\def\skipline{\\}
+\def\exspace{\vspace{1ex}}
+%%\def\smallskip{\vspace{1ex}}  %%already defined in TeX
+
+%  define \ample font size; 10% larger than \normalsize,
+%  but smaller than \large
+
+\if0\@ptsize
+   \def\ample{\@setsize\large{12pt}\xipt\@xipt}
+\else
+   \def\ample{\large}
+\fi
+
+\def\titlefont{\LARGE\bf}  %% insurance
+\if0\@ptsize
+   \font\titlefont = cmbx12 at 16truept  % 10pt
+\else
+   \def\titlefont{\LARGE\bf}             % other
+\fi
+
+\def\title#1{\gdef\@title{\titlefont #1}}
+
+%% does anything have to be done like this??????  like opening in crckcpb?
+%\def\@preamblecmds{\do\document \do\documentstyle \do\@documentstyle
+%   \do\@options \do\@preamblecmds \do\@optionlist \do\@optionfiles
+%   \do\nofiles \do\includeonly \do\makeindex \do\makeglossary}
+
+\def\authorinfo#1{\gdef\@authorinfo{#1}}
+\authorinfo{}     %% default is empty
+
+%% superscript in italics, to cross reference author and affiliations
+\def\supit#1{\raisebox{0.8ex}{\small\it #1}\hspace{0.05em}}
+
+\def\maketitle{\par
+ \begingroup
+   \def\thefootnote{\fnsymbol{footnote}}%
+   \def\@makefnmark{\hbox
+       to\z@{$\m@th^{\@thefnmark}$\hss}}%
+   \if@twocolumn
+     \twocolumn[\@maketitle]%
+     \else \newpage
+     \global\@topnum\z@
+     \@maketitle \fi     %%%\thispagestyle{plain}  % remove from article.sty (Vaisey)
+     \@thanks
+ \endgroup
+% \setcounter{footnote}{0}%  keep sequence going
+ \let\maketitle\relax
+ \let\@maketitle\relax
+ \gdef\@thanks{}\gdef\@author{}\gdef\@title{}\let\thanks\relax
+
+\renewcommand{\thefootnote}{\fnsymbol{footnote}}
+\ifx\@authorinfo\empty \else\footnotetext[0]{\@authorinfo}\fi
+%% use zero to avoid footnote mark
+\renewcommand{\thefootnote}{\fnsymbol{footnote}}  %% use footnote symbols, not numbers
+
+}
+
+%\def\authfont{\@setsize\large{12pt}\xipt\@xipt}
+
+\def\@maketitle{\newpage
+ \null
+% move title to top of page
+\if0\@ptsize\vspace{-10mm}\else\vspace{-12mm}\fi
+
+ \begin{center}%
+  {\setlength{\baselineskip}{4.3ex} \@title \par}
+  \vskip 3.5mm                  %1.5em
+  {\large  % use ample??          % author and organization font size
+%   \lineskip 1.8ex             %.5em  %%no effect??
+   \begin{tabular}[t]{c}\@author
+   \end{tabular}\par}%
+  \vskip 1.5ex                  %%1em
+  {\large \@date}%
+ \end{center}%
+ \par
+}
+
+% SECTION CHARACTERISTICS
+% add period to section numbers, reduce space after
+\renewcommand{\thesection}
+   {\arabic{section}.\hskip-0.6em}
+\renewcommand{\thesubsection}
+   {\arabic{section}.\arabic{subsection}.\hskip-0.6em}
+\renewcommand{\thesubsubsection}
+   {\arabic{section}.\arabic{subsection}.\arabic{subsubsection}.\hskip-0.6em}
+
+% define fonts
+%%%\def\section#1{\gdef\@section{\uppercase{#1}}}  %doesn't work
+
+% all headings bold
+% center section headings, ample size
+\def\sectfont{\centering\ample\bf}
+% sub- and subsubsection headings flush left
+\def\subsectfont{\raggedright\ample\bf}
+\def\subsubsectfont{\raggedright\normalsize\bf}
+
+% vertical spacing of section titles (headings)
+%\def\section#1{\gdef\xsection{\uppercase{#1}}}
+\def\xxxsection#1#2{
+\if\#2\empty
+\xsection{\uppercase{#1}}
+\else
+\xsection{\uppercase{#2}}
+\fi}
+% - in fourth field avoids indent after section heading
+\def\section{\@startsection{section}{1}{\z@}
+   {-2.5ex plus -1ex minus -0.5ex}{0.2ex plus 0.5ex minus 0ex}{\sectfont}}
+\def\subsection{\@startsection{subsection}{2}{\z@}
+   {-1.5ex plus -1ex minus -0.5ex}{0.1ex plus 0.1ex minus 0.1ex}{\subsectfont}}
+\def\subsubsection{\@startsection{subsubsection}{3}{\z@}
+   {-1ex plus -1ex minus -0.5ex}{0.1ex plus 0.1ex}{\subsubsectfont}}
+
+% Add theorem, lemma, and definition environments
+% kmh - noindent
+\def\@begintheorem#1#2{\par\noindent\bgroup{\sc #1\ #2. }\it\ignorespaces}
+\def\@opargbegintheorem#1#2#3{\par\bgroup{\sc #1\ #2\ (#3). }\it\ignorespaces}
+\def\@endtheorem{\egroup}
+\def\proof{\par{\it Proof}. \ignorespaces}
+\def\endproof{{\ \vbox{\hrule\hbox{%
+   \vrule height1.3ex\hskip0.8ex\vrule}\hrule
+  }}\par}
+\newtheorem{theorem}{Theorem}[section]
+\newtheorem{lemma}[theorem]{Lemma}
+\newtheorem{definition}[theorem]{Definition}
+
+% Figure and table captions
+\long\def\@makecaption#1#2{%
+   \vskip 10\p@
+   \setbox\@tempboxa\hbox{{\bf #1. }#2} % bold with period
+   \ifdim \wd\@tempboxa >\hsize
+      {\bf  #1. }#2\par                 % bold with period
+   \else
+      \hbox to\hsize{\hfil\box\@tempboxa\hfil}%
+   \fi}
+
+%%%%% Special sections %%%%%
+\def\abstract{\section*{ABSTRACT}}
+\def\endabstract{}
+
+% Keywords
+\def\keywords#1{
+\par\vspace{0.5ex}{\noindent\normalsize\bf Keywords:} #1
+\vspace{0.5ex}    %% provide extra space before first section
+}
+
+\def\acknowledgements{\section*{ACKNOWLEDGEMENTS}}
+\def\endacknowledgements{}
+
+%% use following at start of appendix, use \section for each appendix
+\def\appendix{\par
+  \setcounter{section}{0}
+  \setcounter{subsection}{0}
+  \setcounter{subsubsection}{0}
+  \def\thesection{APPENDIX \Alph{section}.\hskip-0.5em}  %add period, reduce space
+  \def\thesubsection{\Alph{section}.\arabic{subsection}.\hskip-0.5em}
+\def\thesubsubsection{\Alph{section}.\arabic{subsection}.\arabic{subsubsection}.\hskip-0.5em}
+%%%?? the last two do not seem to work??
+}
+
+% Citations are superscripts (taken from aip.sty)
+\def\@cite#1#2{\unskip\nobreak\relax
+    \def\@tempa{$\m@th^{\hbox{\the\scriptfont0 #1}}$}%
+    \futurelet\@tempc\@citexx}
+\def\@citexx{\ifx.\@tempc\let\@tempd=\@citepunct\else
+    \ifx,\@tempc\let\@tempd=\@citepunct\else
+    \let\@tempd=\@tempa\fi\fi\@tempd}
+\def\@citepunct{\@tempc\edef\@sf{\spacefactor=\the\spacefactor\relax}\@tempa
+    \@sf\@gobble}
+
+% \citenum emits the plain citation number without ornament
+% \citea puts its argument into the ornamentation for citations
+% thus \cite{foo} is equivalent to \citea{\citenum{foo}}
+\def\citenum#1{{\def\@cite##1##2{##1}\cite{#1}}}
+\def\citea#1{\@cite{#1}{}}
+
+% Collapse citation numbers to ranges.  Non-numeric and undefined labels
+% are handled.  No sorting is done.  E.g., 1,3,2,3,4,5,foo,1,2,3,?,4,5
+% gives 1,3,2-5,foo,1-3,?,4,5
+\newcount\@tempcntc
+\def\@citex[#1]#2{\if@filesw\immediate\write\@auxout{\string\citation{#2}}\fi
+  \@tempcnta\z@\@tempcntb\m@ne\def\@citea{}\@cite{\@for\@citeb:=#2\do
+    {\@ifundefined
+       {b@\@citeb}{\@citeo\@tempcntb\m@ne\@citea\def\@citea{,}{\bf ?}\@warning
+       {Citation `\@citeb' on page \thepage \space undefined}}%
+    {\setbox\z@\hbox{\global\@tempcntc0\csname b@\@citeb\endcsname\relax}%
+     \ifnum\@tempcntc=\z@ \@citeo\@tempcntb\m@ne
+       \@citea\def\@citea{,}\hbox{\csname b@\@citeb\endcsname}%
+     \else
+      \advance\@tempcntb\@ne
+      \ifnum\@tempcntb=\@tempcntc
+      \else\advance\@tempcntb\m@ne\@citeo
+      \@tempcnta\@tempcntc\@tempcntb\@tempcntc\fi\fi}}\@citeo}{#1}}
+\def\@citeo{\ifnum\@tempcnta>\@tempcntb\else\@citea\def\@citea{,}%
+  \ifnum\@tempcnta=\@tempcntb\the\@tempcnta\else
+   {\advance\@tempcnta\@ne\ifnum\@tempcnta=\@tempcntb \else \def\@citea{--}\fi
+    \advance\@tempcnta\m@ne\the\@tempcnta\@citea\the\@tempcntb}\fi\fi}
+
+% Give the references section a section number
+
+\def\thebibliography#1{\section*{REFERENCES\@mkboth
+ {REFERENCES}{REFERENCES}}\list
+ {\arabic{enumi}.}{\settowidth\labelwidth{[#1]}\leftmargin\labelwidth
+ \advance\leftmargin\labelsep
+ \usecounter{enumi}}
+ \def\newblock{\hskip .11em plus .33em minus .07em}
+ \parskip -0.7ex plus 0.5ex minus 0ex   %% reduce vspace between items
+%%-0.9ex %for equal line spacing between items and within reference
+\if0\@ptsize\else\small\fi      %% smaller fonts
+ \sloppy\clubpenalty4000\widowpenalty4000
+ \sfcode`\.=1000\relax}
+\let\endthebibliography=\endlist
+
