@@ -33,10 +33,10 @@
 %  can be indicated with a superscript in italics, 
 %  which is easily obtained with \supit{}.
 
-\author{Daniel L. Lau\supit{a} and Ying Yu\supit{b}
+\author{Daniel L. Lau\supit{a} and Ying Yu\supit{a} and Matthew Ruffner\supit{a}
 \skiplinehalf
 \supit{a}University of Kentucky, Address, Lexington, US; \\
-\supit{b}University of Kentucky, Address, Lexington, US
+%\supit{b}University of Kentucky, Address, Lexington, US
 }
 
 %>>>> Further information about the authors, other than their 
@@ -74,7 +74,7 @@ Scanning time is a major issue in structured light research as numerous papers h
 
 With regards to performing structured light scanning with commodity components, a major issue is the inability to properly synchronize a camera and projector such that one can associate a specific pattern to a specific captured image without including some type of key-frame scheme and analyzing the pixels of the captured image. As clearly documented by graphics card manufacturers~\cite{nvid18}, GPUs are not real-time systems, and there is no way for the CPU to know when a requested pattern shows up on the HDMI port. And while its possible to guarantee that no particular pattern is dropped, its not possible to guarantee that a particular pattern won't be repeated multiple times in a row.
 
-As a means of addressing one's ability to properly synchronize the camera and projector, there are commercially available projectors that include electronics to embed patterns into the projector which include appropriate GPIO to interface with a camera's trigger~\cite{glop18, ajil18, lcft18}; however, these projectors are inordinately expensive on a per lumens basis.  As of the time of this writing, the TI Lightcrafter 4500 retails for \$1,250 with only 150~lumens brightness~\cite{tilc17} while an LED-based Optoma ML750ST has approximately 700 lumens brightness~\cite{lume70} with the same spatial light modulator for \$550~\cite{ml75st}. Admittedly, the TI Lightcrafter 4500 can project patterns at up to 4,225~Hz, but the 120~Hz of 3D ready projectors is more than adequate for most machine vision cameras limited in frame rate by either the bus to the CPU (USB 3.0, for instance) or by the exposure time required by the sensor.
+As a means of addressing one's ability to properly synchronize the camera and projector, there are commercially available projectors that include electronics to embed patterns into the projector which include appropriate GPIO to interface with a camera's trigger~\cite{glop18, ajil18, lcft18}; however, these projectors are inordinately expensive on a per lumens basis.  As of the time of this writing, the TI Lightcrafter 4500 retails for \$1,250 with only 150~lumens brightness~\cite{tilc17} while an LED-based Optoma ML750ST has approximately 500 lumens brightness~\cite{lume70} with the same spatial light modulator for \$550~\cite{ml75st}. Admittedly, the TI Lightcrafter 4500 can project patterns at up to 4,225~Hz, but the 120~Hz of 3D ready projectors is more than adequate for most machine vision cameras limited in frame rate by either the bus to the CPU (USB 3.0, for instance) or by the exposure time required by the sensor.
 
 As a means of ensuring perfect projector/camera synchronization using commodity components, we propose a novel approach to machine vision camera architectures by incorporating HDMI pass-through where the camera reads the incoming HDMI video to extract hand-shaking messages embedded into the top-left pixel. Such handshaking could be used to then trigger the camera to capture the projected frames, ignoring duplicate or don't care frames.  Without an incoming HDMI signal, the machine vision camera can alternately produce its own video signal, converting any HDMI projector into an instant structured light scanner which it instantly syncs.  
 
@@ -98,7 +98,7 @@ The structured light patterns we apply in our system are the phase-shifting sinu
    \begin{center}
    \begin{tabular}{c}
    %\includegraphics[height=7cm]{wf3.png}
-   \includegraphics[width=\linewidth]{wf3.png} 
+   \includegraphics[width=0.8\linewidth]{wf1.png} 
    \end{tabular}
    \end{center}
    \caption{HDMI timing}%[HDMI timing] >>>> use \label inside caption to get Fig. number with \ref{}

@@ -73,7 +73,35 @@ This document shows the desired format and appearance of a manuscript prepared f
 Structured light illumination 
 
 \section{HDMI}
-HDMI is the abbreviation of High-Definition Multimedia Interface, it is one of the most popular diaplay interfaces. The newest release, HDMI Version 2.1 supports up to $10K$ video at $120 Hz$.
+HDMI is the abbreviation of High-Definition Multimedia Interface, it is one of the most popular display interfaces. The newest release, HDMI Version 2.1 supports up to $10K$ video at $120 Hz$. A standard HDMI connector has 19 pins as listed in Table \ref{Tab:1}.
+
+% Please add the following required packages to your document preamble:
+% \usepackage[table,xcdraw]{xcolor}
+% If you use beamer only pass "xcolor=table" option, i.e. \documentclass[xcolor=table]{beamer}
+\begin{table}[]
+\caption{HDMI pinout}
+\label{Tab:1}
+\begin{tabular}{|c|l|}
+\hline
+\rowcolor[HTML]{C0C0C0} 
+{\color[HTML]{000000} \textbf{PIN}} & \multicolumn{1}{c|}{\cellcolor[HTML]{C0C0C0}{\color[HTML]{000000} \textbf{DATA}}} \\ \hline
+\multicolumn{1}{|l|}{Data2+, Data2 Shield, Data2-} & red pixel component, CTL2, CTL3 and auxiliary data \\ \hline
+\multicolumn{1}{|l|}{Data1+, Data1 Shield, Data1-} & green pixel component, CTL0, CTL1 and auxiliary data \\ \hline
+\multicolumn{1}{|l|}{Data0+, Data0 Shield, Data0-} & blue pixel component, HSYNC, VSYNC and auxiliary data \\ \hline
+\multicolumn{1}{|l|}{Clock+, Clock Shield, Clock-} & pixel clock \\ \hline
+SCL, SDA & DDC channel, the source reads the EDID from the sink \\ \hline
+CEC & data or commands from remote control \\ \hline
+Reserved/HEAC+ & reserved for v1.3 and before, Ethernet and audio since v1.4 \\ \hline
+HOT PLUG DETECT/HEAC- & indicate the hot plug or paired with HEAC+ \\ \hline
++5V, Ground & power from external or HDMI source, ground \\ \hline
+\end{tabular}
+\end{table}
+
+Data channel 2, 1, 0 are mainly used to transfer red, green and blue components of the video respectively. The HDMI does not only transfer video data, but also some auxiliary data, for example audio data, packet header. The auxiliary data, video data as well as some control signals are encoded in data channel 2, 1, 0 and then digitally transmitted in serial. In between any two adjacent video periods, one or more data island period and control period are inserted. There are six important control signals, HSYNC indicates the beginning and end of a row in a frame of the video, VSYNC indicates the beginning and end of a frame, CTL0~CTL3 indicate the data type of the following data period. The three data channels are transmitted through a differential signaling technology called Transition-Minimized Differential Signaling (TMDS) to reduce the impact of electromagnatic interference and enable high clock skew tolerance. Another common application of TMDS is in the Digital Visual Interface (DVI).\\
+The 5 volts power signal is provided by the HDMI source or an external source. After the HDMI sink receives an 5 volts signal at the corresponding pin, it immediately asserts the pin Hot Plug Detect. Once the HDMI source detects the presence of a sink by the assertion of the pin Hot Plug Detect, it sends an $I^2C$-based command of a read request to the sink. The pins SCL and SDA compose the display data channel (DDC) via which the Extended Display Identification Data (EDID) is read by the HDMI source from the sink as the response to the read request. The EDID is usually 128 or 256 bytes long, it contains various information related to the features of display system, including but not limited to, manufacturer ID, serial number, week and year of manufacture, screen size, supported timing, etc.\\
+The pin CEC is used for high-level
+CEC stands for Consumer Electronics Control, it is also a one-wire bus protocol, the implementation of CEC is optional, because not all the HDMI devices support this feature. Since HDMI 1.4, the previously reserved pin has become the HDMI Ethernet and Audio Returen Channel (HEAC),
+
 %\begin{figure}
 %   \begin{center}
 %   \begin{tabular}{c}
@@ -81,17 +109,18 @@ HDMI is the abbreviation of High-Definition Multimedia Interface, it is one of t
 %   \includegraphics[width=\linewidth]{wf3.png} 
 %   \end{tabular}
 %   \end{center}
-%   \caption{HDMI timing}%[HDMI timing] >>>> use \label inside caption to get Fig. number with \ref{}
-%   \label{Fig:1}% Figure captions are used to describe the figure and help the reader understand it's significance.  The caption should be centered underneath the figure and set in 9-point font.  It is preferable for figures and tables to be placed at the top or bottom of the page. LaTeX tends to adhere to this standard.}
+%   \caption{HDMI timing}
+%   \label{Fig:1}
 %   \end{figure} 
 
 \section{System implementation based on FPGA}
-The system diagram is shown in Figure %\ref{}
-The system generates structured light patterns at the resolution of $800x600$, the refresh rate of $120 Hz$. According to the document provided by VESA \cite{vesa07}, the HDMI timing should be set as table \ref{Tab:1}.
+The system diagram is shown in Figure \ref{Fig:1}.
+The system generates structured light patterns at the resolution of $800x600$, the refresh rate of $120 Hz$. According to the document provided by VESA \cite{vesa07}, the HDMI timing should be set as Table \ref{Tab:2}.
+
 
 \begin{table}[!htb]
 \caption{HDMI timing of $800x600 @ 120 Hz$}
-\label{Tab:1}
+\label{Tab:2}
 \parbox{.45\linewidth}{
 \centering
 \begin{tabular}{|l|l|}
@@ -115,8 +144,21 @@ The system generates structured light patterns at the resolution of $800x600$, t
 \end{table}
 
 We utilize an $I^2C$ programmable oscillator Si514 to generate the unusual 73.25MHz pixel clock.
+
+\begin{figure}
+   \begin{center}
+   \begin{tabular}{c}
+   \includegraphics[height=7cm]{sysdg.png}
+   %\includegraphics[width=\linewidth]{sysdg.png} 
+   \end{tabular}
+   \end{center}
+   \caption{System diagram}
+   \label{Fig:1}
+   \end{figure} 
+
+LUT used to adjust the linearty of the projector
+
 \acknowledgments     %>>>> equivalent to \section*{ACKNOWLEDGMENTS}       
- 
 This unnumbered section is used to identify those who have aided the authors in understanding or accomplishing the work presented and to acknowledge sources of funding.  
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
