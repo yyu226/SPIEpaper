@@ -153,25 +153,22 @@ The two SLI pattern generators output two synchronized phase-shifting fringe pat
 \label{Tab:2}
 \end{table}
 
-To obtain the uncommon 73.25MHz pixel clock, we utilize a programmable oscillator Si514. By configuring the internal registers through $I^2C$ bus, Si514 can generate any frequency from 100kHz to 250MHz with a tuning resolution of 0.026 ppb. Therefore, an $I^2C$ master controller was incorporated into the system. One last module in the system is a lookup table (LUT) that is used to linearize the output of the projector. Ideally, the input digital values of the projector is proportional to the light intensity at the output side of the projector. The light intensity is measured by reading the pixel value of the photo taken by the camera. However, in practice, they are non-linear for most of the times due to some intrinsic characteristics of the projector, e. g. gamma distortion \cite{gamm10}. Applying a LUT to compensate the gamma distortion is an effective way to address this problem of non-linearity, as shown in the Figure \ref{Fig:2} and Figure \ref{Fig:3}, the x-axis is the input digital value of the projector at a certain point of the scene, the y-axis is the light intensity of the same point that is read from camera's perspective.
- This LUT can be hard-coded into the configuration file of the FPGA, but the drawback is that once the lookup table changes, the FPGA configuration file has to be changed. It is quite inconvenient especially when the system needs to be often applied to a different projector. We devise a method that the user stores the LUT in an EEPROM which can be erased and written by any computer via serial port or USB, and the SPI master module in the FPGA reads the EEPROM every time the system  is powered on. With this approach, users can load a new LUT much simpler and faster.
+To obtain the uncommon 73.25MHz pixel clock, we utilize a programmable oscillator Si514. By configuring the internal registers through $I^2C$ bus, Si514 can generate any frequency from 100kHz to 250MHz with a tuning resolution of 0.026 ppb. Therefore, an $I^2C$ master controller was incorporated into the system. One last module in the system is a lookup table (LUT) that is used to linearize the output of the projector. Ideally, the input digital values of the projector is proportional to the light intensity at the output side of the projector. The light intensity is measured by reading the pixel value of the photo taken by the camera. However, in practice, they are non-linear for most of the times due to some intrinsic characteristics of the projector, e. g. gamma distortion \cite{gamm10}. Applying a LUT to compensate the non-linearity is an effective way to address this problem, as shown in the Figure \ref{Fig:2}, the x-axis represents the 8-bit input digital value of the projector at a certain point of the scene, the y-axis represents the light intensity of the same point that is measured from camera's perspective.
+ This LUT can be hard-coded into the configuration file of the FPGA, but the drawback is that once the lookup table changes, the FPGA configuration file has to be changed. It is quite inconvenient especially when the system needs to be often applied to a different projector, because generating a new FPGA configuration file requires special software tool and takes more time. We devise a method that the user stores the LUT in an separate EEPROM chip which can be erased and written by any computer via some general serial or USB tools, and the SPI master module in the FPGA reads the EEPROM every time the system  is powered on. With this approach, users can load new LUTs much faster and easier.
 
 \begin{figure}
-\centering
-\parbox{7cm}{
-\includegraphics[width=7cm]{lut.pdf}
-\caption{output without LUT}
-\label{Fig:2}}
-\qquad
-\begin{minipage}{7cm}
-\includegraphics[width=7cm]{lut.pdf}
-\caption{output with LUT}
-\label{Fig:3}
-\end{minipage}
-\end{figure}
+   \begin{center}
+   \begin{tabular}{c}
+   \includegraphics[height=7cm]{wolut.png}
+   %\includegraphics[width=\linewidth]{sysdg.png} 
+   \end{tabular}
+   \end{center}
+   \caption{Non-linearity of the projector Optoma ML750ST}
+   \label{Fig:2}
+   \end{figure} 
 
 
-Our tested system looks as Figure \ref{Fig:3} shows.
+Figure \ref{Fig:3} shows a picture of our tested system.
 
 \begin{figure}
    \begin{center}
@@ -181,7 +178,7 @@ Our tested system looks as Figure \ref{Fig:3} shows.
    \end{tabular}
    \end{center}
    \caption{the dual-projector SLI system}
-   \label{Fig:4}
+   \label{Fig:3}
    \end{figure} 
 
 \acknowledgments     %>>>> equivalent to \section*{ACKNOWLEDGMENTS}       
