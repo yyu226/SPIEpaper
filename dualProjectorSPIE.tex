@@ -71,13 +71,15 @@ This document shows the desired format and appearance of a manuscript prepared f
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Introduction}
 \label{sec:intro}  % \label{} allows reference to this section
-As one of the non-contact 3D shape measurement techniques, the structured light illumination (SLI) has been known for its high resolution and high speed \cite{chen00}. Conventional SLI systems consist of one projector, one camera and one processing unit which is usually a computer. The projector presents patterns that are encoded with some information related to the pixel locations on the object to be measured. If the projection is on a flat surface, the patterns seen should be identical to its original design. However, with the presence of the non-planar object under the projection, what is actually seen from the camera is the distorted patterns on the surface of the object. By comparing and analyzing the distortion in the images taken by the camera, the 3D surface of the object can eventually be reconstructed in a processing unit.
+As one of the non-contact 3D shape measurement techniques, the structured light illumination (SLI) has been known for its high resolution and high speed~\cite{chen00}. Conventional SLI systems consist of one projector, one camera and one processing unit which is usually a computer. The projector presents patterns that are encoded with some information related to the pixel locations on the object to be measured. If the projection is on a flat surface, the patterns seen should be identical to its original design. However, with the presence of the non-planar object under the projection, what is actually seen from the camera is the distorted patterns on the surface of the object. By comparing and analyzing the distortion in the images taken by the camera, the 3D surface of the object can eventually be reconstructed in a processing unit.
 
-Within the scope of this fundamental idea and system structure, a lot of research has been done over the past several decades \cite{geng11}. Different practical implementations have been proposed, from pattern design to system calibration, then to the algorithms that are used to decode the captured patterns. One widely studied area is the one-shot SLI strategy in which only one static pattern is projected onto the object. It employs color pattern \cite{wust91}, binary grid pattern \cite{grin92}, gray-scale pattern \cite{durd98} or even composite pattern \cite{guan08}. Since there is only one image need to be processed for a scan, the 3D reconstruction can be completed fast. The one-shot strategy is ideal for high speed applications such as real time scanning. But in terms of accuracy, it is not so promising compared to some multi-shot SLI strategy in which the 3D reconstruction is derived by projecting a sequence of patterns and processing multiple images \cite{blai03}.
+Within the scope of this fundamental idea and system structure, a lot of research has been done over the past several decades~\cite{geng11}. Different practical implementations have been proposed, from pattern design to system calibration, then to the algorithms that are used to decode the captured patterns. One widely studied area is the one-shot SLI strategy in which only one static pattern is projected onto the object. It employs color pattern~\cite{wust91}, binary grid pattern~\cite{grin92}, gray-scale pattern~\cite{durd98} or even composite pattern~\cite{guan08}. Since there is only one image need to be processed for a scan, the 3D reconstruction can be completed fast. The one-shot strategy is ideal for high speed applications such as real time scanning. But in terms of accuracy, it is not so promising compared to some multi-shot SLI strategy in which the 3D reconstruction is derived by projecting a sequence of patterns and processing multiple images~\cite{blai03}.
 
-According to the method of encoding the information containing the pixel location into the pattern, phase measuring profilometry (PMP) \cite{srin85} is a subset of SLI techniques that acquires the depth value by translating the phase data from the projected patterns pixelwise. The PMP has some advantageous features including its insensitivity to ambient light and its high accuracy \cite{guan03, hali89}. Higher frequency patterns have been introduced to PMP systems to reduce the effects of the noise and achieve higher accuracy \cite{lijl03}. Nonetheless, higher frequency patterns also produces the phase ambiguity which requires the system to execute some extra computation called phase unwrapping \cite{song18}. Furthermore, adding high frequency patterns increases the projection time as well as the number of images to be processed, which accordingly decreases the overall speed of the system. Liu \textit{et al}. proposed an ingenious dual-frequency pattern strategy which combines a high-frequency pattern and a unit-frequency pattern into one composite pattern \cite{liuk10}, it improved the accuracy without increasing the scanning time.
+According to the method of encoding the information containing the pixel location into the pattern, phase measuring profilometry (PMP)~\cite{srin85} is a subset of SLI techniques that acquires the depth value by translating the phase data from the projected patterns pixelwise. The PMP has some advantageous features including its insensitivity to ambient light and its high accuracy~\cite{guan03, hali89}. Higher frequency patterns have been introduced to PMP systems to reduce the effects of the noise and achieve higher accuracy~\cite{lijl03}. Nonetheless, higher frequency patterns also produces the phase ambiguity which requires the system to execute some extra computation called phase unwrapping~\cite{song18}. Furthermore, adding high frequency patterns increases the projection time as well as the number of images to be processed, which accordingly decreases the overall speed of the system. Liu \textit{et al}. proposed an ingenious dual-frequency pattern strategy which combines a high-frequency pattern and a unit-frequency pattern into one composite pattern~\cite{liuk10}, it improved the accuracy without increasing the scanning time.
 
-In this paper, we propose a dual-projector, dual-frequency SLI scheme and its practical implementation. Provided with a wider projection angle by two projectors, our system not only takes advantage of the Liu \textit{et al}.'s pattern design, but also overcomes the issues like muti-path \cite{otoo16} and occlusion \cite{linj13} that single- projector systems suffer from. Additionally, if two projectors are positioned side by side and aimed at the same projection area, we can get double the luminance. For instance, suppose the projectors we use are two identical Optoma ML750ST which has around 500 lumens each \cite{lume70}, by using two projectors, we obtain a total 1000 lumens. Higher light intensity gives rise to the higher signal-to-noise ratio (SNR) \cite{wangy10}, which makes the system less susceptible to noise, consequently the system becomes more robust and accurate.
+In this paper, we propose a dual-projector, dual-frequency SLI scheme and its practical implementation. Unlike the scanner presented by XXXX~\cite{??}, the proposed scanner projects patterns from both projectors simultaneously, which keeps the scan time the same versus a single projector scanner.  We also allow the projectors to be placed in any arbitrary arrangement with 3D point clouds generated from a single fused phase image instead of fusing to independently generated point clouds. Depending on the arrangements of projectors as illustrated in Fig.~\ref{Fig:10}, a dual-projector SLI scanner can be used to minimize occlusions~\cite{linj13} since a scan surface needs to be visible to at least one projector and the camera.  So placing projectors in opposition means a face, for example, can be illuminated from both sides.  Having two unique paths of light from projector to camera also creates new opportunities and challenges for overcoming the issue of muti-path~\cite{otoo16}. 
+
+Placing projectors side-by-side can be used to achieve twice the luminance of a single projector. For instance, suppose the projectors we use are two identical Optoma ML750ST which has around 500 lumens each~\cite{lume70}, by using two projectors, we obtain a total 1000 lumens. Higher light intensity gives rise to the higher signal-to-noise ratios (SNR)~\cite{wangy10}, which makes the system less susceptible to sensor noise, consequently the system becomes more robust and accurate.
 
 \begin{figure}
 \centerline{\includegraphics[width=5.0in]{Figures/Layouts}}
@@ -86,8 +88,10 @@ In this paper, we propose a dual-projector, dual-frequency SLI scheme and its pr
 \label{Fig:10}
 \end{figure} 
 
+Now in order for dual-projector SLI scanners to become practical, there are two fundamental problems that need to be addressed.  The first is the practical implementation of control logic to perfectly synchronize the projectors to a camera.  For this, we describe an FPGA-based controller using a commodity FPGA board to simultaneously drive two HDMI ports.  The advantage of this system is that it allows us to avoid the practical issues associated with modern GPUs as well as staying low cost.  The second problem that needs to be addressed is how to perform phase unwrapping when the phase images derive from separate projectors arbitrarily arranged.  Using the dual-frequency pattern scheme, we demonstrate using a unit-frequency phase image from one projector to unwrap the high-frequency phase image in the second, opposed projector, using a look-up table-based operation ideally suited for GPUs. This real-time approach is highly flexible and can be used to replace phase unwrapping schemes such as the Chinese remainder technique of XXXX~\cite{??}.
+
 \section{Dual-frequency Phase Measuring Profilometry}
-The dual-frequency pattern scheme was initially proposed by Liu \textit{et al}.\cite{liuk10}, it is essentially  an improved derivation of the phase measuring profilometry \cite{hali89}. In the the traditional PMP a series of phase-shifting sinusoidal fringe patterns are projected onto the object to be measured, the fringe patterns can be either horizontal or vertical, the presence of the object distorts the patterns, then by analyzing the phase values in the deformed pattern images, the 3D depth values can be obtained.
+The dual-frequency pattern scheme was initially proposed by Liu \textit{et al}.\cite{liuk10}, it is essentially  an improved derivation of the phase measuring profilometry~\cite{hali89}. In the the traditional PMP a series of phase-shifting sinusoidal fringe patterns are projected onto the object to be measured, the fringe patterns can be either horizontal or vertical, the presence of the object distorts the patterns, then by analyzing the phase values in the deformed pattern images, the 3D depth values can be obtained.
 
 Suppose the phase-shifting patterns are vertical, which indicates that all the pixels in a same row have the identical intensity, and from top to bottom the value of intensities in each row form a sinusoidal function. Therefore, this kind of PMP patterns can be generalized as:
  \begin{equation} \label{eq:1.1}
@@ -178,60 +182,11 @@ The 5 volts power signal is provided by the HDMI source or an external source, w
 
 The pin CEC is used to add some advanced functionalities for the HDMI systems. Usually it is a remote control that issues different high-level commands to the devices connected by HDMI cables. CEC stands for Consumer Electronics Control, it is also a one-wire bus protocol, the implementation of CEC is optional, because not all the HDMI devices support this feature. Since HDMI 1.4, the previously reserved pin has become the HDMI Ethernet and Audio Returen Channel (HEAC). While it is in audio return channel mode, only the HEAC+ line is used to transmit audio data; in HDMI Ethernet channel mode, the HEAC+ line pairs up with the HEAC- line as a differential signal to establish a high speed Ethernet communication.
 
-The camera synchronization module controls the timing of the camera trigger signal, it detects the end of the camera's exposure time and makes sure that during the whole camera's exposure time, there is no different pattern projected and every unique phase-shifting fringe pattern is pictured sequentially by the camera. The projector in our SLI system operates at the resolution of $800x600$ and the refresh rate of $120 Hz$. According to the document from VESA \cite{vesa07}, the HDMI timing should be set as Table \ref{Tab:2} lists.
+To obtain the uncommon 73.25~MHz pixel clock for $800\times 600$ pixel video at 120~Hz which cannot be generated by the Spartan 6 of the Mojo board, we utilize a programmable oscillator, the Si514. By configuring the internal registers through $I^2C$ bus, Si514 can generate any frequency from 100~kHz to 250~MHz with a tuning resolution of 0.026 ppb. Therefore, an $I^2C$ master controller was incorporated into the system...what parameters did you use to get the clock rate with this oscillator. 
 
-\begin{table}[!b]
-\caption{HDMI timing of $800\times 600$ at $120~\mbox{Hz}$}
-\label{Tab:2}
-\parbox{.45\linewidth}{
-\centering
-\begin{tabular}{|l|l|}
-\hline
-\textbf{Pixel Clock} & 73.250MHz \\ \hline
-\textbf{Hor. Front Porch} & 48 pixels \\ \hline
-\textbf{Hor. Sync Time} & 32 pixels \\ \hline
-\textbf{Hor. Back Porch} & 80 pixels \\ \hline
-\end{tabular}}
-\hfill
-\parbox{.45\linewidth}{
-\centering
-\begin{tabular}{|l|l|}
-\hline
-\textbf{Ver. Front Porch} & 3 lines \\ \hline
-\textbf{Ver. Sync Time} & 4 lines \\ \hline
-\textbf{Ver. Back Porch} & 29 lines \\ \hline
-\end{tabular}
-}\\
-\end{table}
+Now in order to linearize the projector to avoid the deleterious effects of gamma distortion~\cite{gamm10} on our projected PMP patterns, we use the EEPROM of the Mojo board to upload calibrated tone correction curves for our target projector...JUST SAY SOMETHING ABOUT HOW THE LUT IS PROGRAMMED OVER SERIAL COMMUNICATION WITH MICROCONTOLLER AND THAT IT IS READ DURING BOOT UP OF THE FPGA TO THE INTERNAL LUT INSIDE YOUR BIT FILE...This LUT can be hard-coded into the configuration file of the FPGA, but the drawback is that once the lookup table changes, the FPGA configuration file has to be changed. It is quite inconvenient especially when the system needs to be often applied to a different projector, because generating a new FPGA configuration file requires special software tool and takes more time. We devise a method that the user stores the LUT in an separate EEPROM chip which can be erased and written by any computer via some general serial or USB tools, and the SPI master module in the FPGA reads the EEPROM every time the system  is powered on. With this approach, users can load new LUTs much faster and easier.
 
-To obtain the uncommon 73.25MHz pixel clock, we utilize a programmable oscillator Si514. By configuring the internal registers through $I^2C$ bus, Si514 can generate any frequency from 100kHz to 250MHz with a tuning resolution of 0.026 ppb. Therefore, an $I^2C$ master controller was incorporated into the system. One last module in the system is a lookup table (LUT) that is used to linearize the output of the projector. Ideally, the input digital values of the projector is proportional to the light intensity at the output side of the projector. The light intensity is measured by reading the pixel value of the photo taken by the camera. However, in practice, they are non-linear for most of the times due to some intrinsic characteristics of the projector, e. g. gamma distortion \cite{gamm10}. Applying a LUT to compensate the non-linearity is an effective way to address this problem, as shown in the Figure \ref{Fig:2}, the x-axis represents the 8-bit input digital value of the projector at a certain point of the scene, the y-axis represents the light intensity of the same point that is measured from camera's perspective.
-
-This LUT can be hard-coded into the configuration file of the FPGA, but the drawback is that once the lookup table changes, the FPGA configuration file has to be changed. It is quite inconvenient especially when the system needs to be often applied to a different projector, because generating a new FPGA configuration file requires special software tool and takes more time. We devise a method that the user stores the LUT in an separate EEPROM chip which can be erased and written by any computer via some general serial or USB tools, and the SPI master module in the FPGA reads the EEPROM every time the system  is powered on. With this approach, users can load new LUTs much faster and easier.
-
-\begin{figure}
-   \begin{center}
-   \begin{tabular}{c}
-   \includegraphics[height=7cm]{wolut.png}
-   %\includegraphics[width=\linewidth]{sysdg.png} 
-   \end{tabular}
-   \end{center}
-   \caption{Non-linearity of the projector Optoma ML750ST}
-   \label{Fig:2}
-   \end{figure} 
-
-
-Figure \ref{Fig:3} shows a picture of our tested system.
-
-\begin{figure}
-   \begin{center}
-   \begin{tabular}{c}
-   \includegraphics[height=7cm]{dpphoto.jpg}
-   %\includegraphics[width=\linewidth]{dpphoto.jpg} 
-   \end{tabular}
-   \end{center}
-   \caption{the dual-projector SLI system}
-   \label{Fig:3}
-   \end{figure} 
+The camera synchronization module controls the timing of the camera trigger signal...DESCRIBE THE GPIO CONNECTIONS BETWEEN CAMERA AND PROJECTOR.  IN PARTICULAR, YOU RECEIVE AN ENABLE BIT WHICH IS A PROGRAMMABLE GENERAL PURPOSE BIT FROM THE CAMERA TO THE FPGA THAT THE PC CAN ENABLE WHEN THE HOST PC IS READY TO PERFORM A SCAN.  YOU THEN START PROJECTING THE FIRST PATTERN IN THE SEQUENCE AND WAIT FOR A SECOND BIT, THE FRAME TRIGGER READY BIT FROM THE CAMERA TO THE FPGA, THAT TELLS THE FPGA THAT IT IS READY FOR A TRIGGER.  ON THE SUBSEQUENT VERTICAL SYNC, THE FPGA SENDS OUT A TRIGGER SIGNAL TO THE CAMERA.  THE FPGA THEN STARTS PROJECTING THE NEXT PATTERN IN THE SEQUENCE WHILE WAITING FOR THE FRAME TRIGGER READY TO GO HIGH AGAIN.  WHEN IT DOES, THE FPGA WAITS FOR THE NEXT VERTICAL SYNC TO SEND OUT A TRIGGER, MOVING TO THE NEXT PATTERN IN THE SEQUENCE.  IT IS UP TO THE PC TO SET THE TRIGGER DELAY AND EXPOSURE TIME IN ORDER TO CAPTURE THE ONE FRAME OF VIDEO THAT CORRESPONDS TO THE PROJECTED PATTERNS.  HOWEVER, THE TRIGGER READY SIGNAL CONTROLS THE FRAME RATE OF THE PROJECTOR TO INTEGER DIVISIONS OF 120 HZ, SUCH AS 120, 60, 40, 24, ETC DEPENDING ON THE BUS SPEED OF THE CAMERA.  SO A GIGE CAMERA WITH A MAXIMUM OF 25 FPS WILL RUN AT 24 FPS. 
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
