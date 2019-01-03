@@ -79,6 +79,13 @@ According to the method of encoding the information containing the pixel locatio
 
 In this paper, we propose a dual-projector, dual-frequency SLI scheme and its practical implementation. Provided with a wider projection angle by two projectors, our system not only takes advantage of the Liu \textit{et al}.'s pattern design, but also overcomes the issues like muti-path \cite{otoo16} and occlusion \cite{linj13} that single- projector systems suffer from. Additionally, if two projectors are positioned side by side and aimed at the same projection area, we can get double the luminance. For instance, suppose the projectors we use are two identical Optoma ML750ST which has around 500 lumens each \cite{lume70}, by using two projectors, we obtain a total 1000 lumens. Higher light intensity gives rise to the higher signal-to-noise ratio (SNR) \cite{wangy10}, which makes the system less susceptible to noise, consequently the system becomes more robust and accurate.
 
+\begin{figure}
+\centerline{\includegraphics[width=5.0in]{Figures/Layouts}}
+\vspace{0.1in}
+\caption{Structured light scanners composed of (left) a single projector, (center) opposed dual-projectors for wrap around scanning, and (right) complementary dual-projectors for increased luminance.}
+\label{Fig:10}
+\end{figure} 
+
 \section{Dual-frequency Phase Measuring Profilometry}
 The dual-frequency pattern scheme was initially proposed by Liu \textit{et al}.\cite{liuk10}, it is essentially  an improved derivation of the phase measuring profilometry \cite{hali89}. In the the traditional PMP a series of phase-shifting sinusoidal fringe patterns are projected onto the object to be measured, the fringe patterns can be either horizontal or vertical, the presence of the object distorts the patterns, then by analyzing the phase values in the deformed pattern images, the 3D depth values can be obtained.
 
@@ -125,8 +132,6 @@ Now in eqns.~\eqref{eq:1.8} and \eqref{eq:1.9}, $\phi_h$ and $\phi_u$ are confin
 	 \tilde{\phi_h} = \phi_h + 2\pi \lfloor\frac{\phi_u}{2\pi/f_h}\rfloor,
   \end{equation}
 where the $\lfloor \rfloor$ is the symbol of floor function which outputs the greatest integer less than or equal to the value enclosed.
-\acknowledgments     %>>>> equivalent to \section*{ACKNOWLEDGMENTS}       
-This unnumbered section is used to identify those who have aided the authors in understanding or accomplishing the work presented and to acknowledge sources of funding.  
 
 \section{Dual-Projector Phase Measuring Profilometry}
 Our FPGA-based dual-projector Structured Light Illumination (SLI) system generates two synchronized SLI patterns which are then fed to two projectors via HDMI. Meanwhile, the projectors and the camera need to be synchronized to ensure that the camera images are taken at the right timing. The system diagram is shown in Figure \ref{Fig:1}. The two SLI pattern generators output two synchronized phase-shifting fringe patterns which are later encoded into TMDS data streams by the HDMI transmitters and eventually move to projectors. 
@@ -231,6 +236,8 @@ Figure \ref{Fig:3} shows a picture of our tested system.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%% References %%%%%
+\acknowledgments
+This work has been supported by Intel Corporation and the National Science Foundation under contract No. 1539157 and the Visual and Experiential Computing initiative. Dr.~Daniel~L.~Lau is a Professor at the University of Kentucky and a Founder of Seikowave Inc., a private company that designs and sells structured light scanners.
 
 \bibliography{report}   %>>>> bibliography data in report.bib
 \bibliographystyle{spiebib}   %>>>> makes bibtex use spiebib.bst
