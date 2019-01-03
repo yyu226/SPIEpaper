@@ -81,12 +81,14 @@ In this paper, we propose a dual-projector, dual-frequency SLI scheme and its pr
 
 Placing projectors side-by-side can be used to achieve twice the luminance of a single projector. For instance, suppose the projectors we use are two identical Optoma ML750ST which has around 500 lumens each~\cite{lume70}, by using two projectors, we obtain a total 1000 lumens. Higher light intensity gives rise to the higher signal-to-noise ratios (SNR)~\cite{wangy10}, which makes the system less susceptible to sensor noise, consequently the system becomes more robust and accurate.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure}
 \centerline{\includegraphics[width=5.0in]{Figures/Layouts}}
 \vspace{0.1in}
 \caption{Structured light scanners composed of (left) a single projector, (center) opposed dual-projectors for wrap around scanning, and (right) complementary dual-projectors for increased luminance.}
 \label{Fig:10}
 \end{figure} 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 Now in order for dual-projector SLI scanners to become practical, there are two fundamental problems that need to be addressed.  The first is the practical implementation of control logic to perfectly synchronize the projectors to a camera.  For this, we describe an FPGA-based controller using a commodity FPGA board to simultaneously drive two HDMI ports.  The advantage of this system is that it allows us to avoid the practical issues associated with modern GPUs as well as staying low cost.  The second problem that needs to be addressed is how to perform phase unwrapping when the phase images derive from separate projectors arbitrarily arranged.  Using the dual-frequency pattern scheme, we demonstrate using a unit-frequency phase image from one projector to unwrap the high-frequency phase image in the second, opposed projector, using a look-up table-based operation ideally suited for GPUs. This real-time approach is highly flexible and can be used to replace phase unwrapping schemes such as the Chinese remainder technique of Xia \textit{et al}. ~\cite{xiax07}.
 
@@ -207,6 +209,41 @@ To obtain the uncommon 73.25~MHz pixel clock for $800\times 600$ pixel video at 
 Now in order to linearize the projector to avoid the deleterious effects of gamma distortion~\cite{gamm10} on our projected PMP patterns, we use the EEPROM of the Mojo board to upload calibrated tone correction curves for our target projector...JUST SAY SOMETHING ABOUT HOW THE LUT IS PROGRAMMED OVER SERIAL COMMUNICATION WITH MICROCONTOLLER AND THAT IT IS READ DURING BOOT UP OF THE FPGA TO THE INTERNAL LUT INSIDE YOUR BIT FILE...This LUT can be hard-coded into the configuration file of the FPGA, but the drawback is that once the lookup table changes, the FPGA configuration file has to be changed. It is quite inconvenient especially when the system needs to be often applied to a different projector, because generating a new FPGA configuration file requires special software tool and takes more time. We devise a method that the user stores the LUT in an separate EEPROM chip which can be erased and written by any computer via some general serial or USB tools, and the SPI master module in the FPGA reads the EEPROM every time the system  is powered on. With this approach, users can load new LUTs much faster and easier.
 
 The camera synchronization module controls the timing of the camera trigger signal...DESCRIBE THE GPIO CONNECTIONS BETWEEN CAMERA AND PROJECTOR.  IN PARTICULAR, YOU RECEIVE AN ENABLE BIT WHICH IS A PROGRAMMABLE GENERAL PURPOSE BIT FROM THE CAMERA TO THE FPGA THAT THE PC CAN ENABLE WHEN THE HOST PC IS READY TO PERFORM A SCAN.  YOU THEN START PROJECTING THE FIRST PATTERN IN THE SEQUENCE AND WAIT FOR A SECOND BIT, THE FRAME TRIGGER READY BIT FROM THE CAMERA TO THE FPGA, THAT TELLS THE FPGA THAT IT IS READY FOR A TRIGGER.  ON THE SUBSEQUENT VERTICAL SYNC, THE FPGA SENDS OUT A TRIGGER SIGNAL TO THE CAMERA.  THE FPGA THEN STARTS PROJECTING THE NEXT PATTERN IN THE SEQUENCE WHILE WAITING FOR THE FRAME TRIGGER READY TO GO HIGH AGAIN.  WHEN IT DOES, THE FPGA WAITS FOR THE NEXT VERTICAL SYNC TO SEND OUT A TRIGGER, MOVING TO THE NEXT PATTERN IN THE SEQUENCE.  IT IS UP TO THE PC TO SET THE TRIGGER DELAY AND EXPOSURE TIME IN ORDER TO CAPTURE THE ONE FRAME OF VIDEO THAT CORRESPONDS TO THE PROJECTED PATTERNS.  HOWEVER, THE TRIGGER READY SIGNAL CONTROLS THE FRAME RATE OF THE PROJECTOR TO INTEGER DIVISIONS OF 120 HZ, SUCH AS 120, 60, 40, 24, ETC DEPENDING ON THE BUS SPEED OF THE CAMERA.  SO A GIGE CAMERA WITH A MAXIMUM OF 25 FPS WILL RUN AT 24 FPS. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Calibration}
+The procedure for calibrating our scanner is illustrated in Fig.~\ref{Fig:20} and involves sweeping a rigid, flat checkerboard pattern in correspondence with the $XY$-plane and moving in fixed, small-steps through the scan volume from the nearest plane where $Z = Z_{min}$ to the farthest plane at $Z = Z_{max}$.  The physical moving of the checkerboard pattern is performed using a motorized rail like the Velmex Bi-slide and VXM controller.  These rails can be configured to move with a positional accuracy of 0.076~mm and repeatability of 0.005~mm.  The specific checkerboard pattern that we use the CalTag calibration target introduced by Atcheson et al~\cite{??} where, inside each square, is a unique 16-bit codeword identifying and absolute world $(X_w,Y_w)$ coordinates of each squares four corners.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}
+\centerline{\includegraphics[width=6.6in]{Figures/SLICalibrationDual}}
+\vspace{0.1in}
+\caption{Illustration showing dual-projector scanner calibration.}
+\label{Fig:20}
+\end{figure} 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+As stated above, the calibration procedure involves iteratively moving the CalTag target along the Z-axis from $Z_{min}$ to $Z_{max}$ such that, at each step, we perform a structured light scan with each camera pixel defined according to:
+\begin{equation}
+I_c[r,c,k] = [X_w[r,c,k], Y_w[r,c,k], Z_w[r,c,k], P[r,c,k]]
+\label{calEqn}
+\end{equation}
+where $r$ and $c$ are the pixel’s row and column coordinate; $k$ is the step index for the current scan; $X_w[r,c,k]$ and $Y_w[r,c,k]$ are the CalTag grid coordinate at the intersection of the CalTag target’s surface and the camera pixel’s line-of-sight; $Z_w[r,c,k]$ is the Z-position of the rail; and $P[r,c,k]$ is the phase value of the projected PMP sequence in the line-of-sight of the camera pixel.  Once complete, we then have a 3D texture composed of a stack of 4-color digital images that are the height and width of our camera and $K$ layers deep with $P[r,c,k]$ ranging from $P_{min}[r,c]$ to $P_{max}[r,c]$ as $Z_w[r,c,k]$ ranges from $Z_{min}[r,c]$ to $Z_{max}[r,c]$.
+
+Given the above data defined in eqn.~\ref{calEqn}, we now want to define a look-up-table as a 3D texture where each pixel in the 3D texture is defined according to:
+\begin{equation}
+LUT[r,c,\tilde{p}[r,c]] = [X_w[r,c,\tilde{p}[r,c]], Y_w[r,c,\tilde{p}[r,c]], Z_w[r,c,\tilde{p}[r,c]]]
+\end{equation}
+where $r$ and $c$ are the pixel’s row and column coordinate and $\tilde{p}[r,c]$ is the normalized phase value observed by the pixel during the scan, which is derived from the measured phase, $p[r,c]$, according to:
+\begin{equation}
+\tilde{p}[r,c] = \frac{p[r,c] - P_{min}[r,c]}{P_{max}[r,c] - P_{min}[r,c]}.
+\end{equation}
+Note that since $P[r,c,k]$ ranged from $P_{min}[r,c]$ to $P_{max}[r,c]$, $\tilde{p}[r,c]$ ranges from 0 to 1.  So $LUT[r,c]$ is derived from $I_c[r,c]$ by interpolation along the $k$-axis versus $P[r,c]$ instead of $k$. Luckily, all of this can be done using an OpenGL shader and the texture command~\cite{??}.
+
+
+
 
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
