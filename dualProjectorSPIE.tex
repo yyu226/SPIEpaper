@@ -97,50 +97,134 @@ The dual-frequency pattern scheme was initially proposed by Liu \textit{et al}.\
 
 Suppose the phase-shifting patterns are vertical, which indicates that all the pixels in a same row have the identical intensity, and from top to bottom the value of intensities in each row form a sinusoidal function. Therefore, this kind of PMP patterns can be generalized as:
  \begin{equation} \label{eq:1.1}
-  	I^p_n(x^p, y^p) = A^p + B^p\cos(2\pi f y^p - \frac{2\pi n}{N}),
+  	I^p_n(x^p, y^p) = A^p + B^p\cos\left(2\pi f y^p - \frac{2\pi n}{N}\right),
   \end{equation}
 where $I^p_n$ is the intensity of the pixel at the coordinate $(x^p, y^p)$ from the projector's point of view; $A^p$ is background intensity which is considered as a constant; $B^p$ is another constant which represents the fringe contrast compared to the background; $f$ is the frequency of the fringe pattern set which is equal to the number of sinusoidal periods from top to the bottom of the projected patterns; $N$ is the total number of the phase-shifting patterns of the same frequency in a set, $n$ is the current number of the pattern within the range of $[0, N-1]$.
 
-On the camera's side, the image of  the object under the projection of each unique PMP pattern is captured as part of the data to reconstruct the 3D profile of the object. So the projected scene of the object can be described as eq. \eqref{eq:1.2} from the camera's point of view, 
+On the camera's side, the image of  the object under the projection of each unique PMP pattern is captured as part of the data to reconstruct the 3D profile of the object. So the projected scene of the object can be described as Eq.~\eqref{eq:1.2} from the camera's point of view, 
  \begin{equation} \label{eq:1.2}
-  	I^c_n(x^c, y^c) =  A^c(x^c, y^c) + B^c(x^c, y^c)\cos(\phi(x^c, y^c) - \frac{2\pi n}{N}),
+  	I^c_n(x^c, y^c) =  A^c(x^c, y^c) + B^c(x^c, y^c)\cos\left(\phi(x^c, y^c) - \frac{2\pi n}{N}\right),
   \end{equation}
-where $I^c_n$ is the intensity of the given pixel $(x^c, y^c)$ in the camera's coordinates system; $A^c(x^c, y^c)$ is the average intensity of the given pixel over the $N$ patterns; $B^c$ can be considered as the average intensity of the PMP pattern seen by the camera, so for any given pixel $(x^c, y^c)$ in a pattern set $[0, N-1]$, $A^c$ and $B^c$ are both constant, furthermore, $B^c(x^c, y^c)$ can be derived from eq. \eqref{eq:1.2} as:
+where $I^c_n$ is the intensity of the given pixel $(x^c, y^c)$ in the camera's coordinates system; $A^c(x^c, y^c)$ is the average intensity of the given pixel over the $N$ patterns; $B^c$ can be considered as the average intensity of the PMP pattern seen by the camera, so for any given pixel $(x^c, y^c)$ in a pattern set $[0, N-1]$, $A^c$ and $B^c$ are both constant, furthermore, $B^c(x^c, y^c)$ can be derived from Eq.~\eqref{eq:1.2} as:
   \begin{equation} \label{eq:1.3}
   	B^c(x^c, y^c) = \frac{2}{N}\sqrt{\left[\sum_{n=0}^{N-1}I_n^c(x^c, y^c)\sin (\frac{2\pi n}{N})\right]^2 + \left[\sum_{n=0}^{N-1}I_n^c(x^c, y^c)\cos (\frac{2\pi n}{N})\right]^2}.
   \end{equation}
-In Equation \ref{eq:1.2}, there is another important constant $\phi$ for any given pixel $(x^c, y^c)$ in a given pattern set $[0, N-1]$, it is the phase value $\phi (x^c, y^c)$ of the distorted fringe patterns that is eventually used to calculate the corresponding depth value of the object. The expression of $\phi (x^c, y^c)$ can be inferred from eq. \eqref{eq:1.3} as:
+In Eq.~\ref{eq:1.2}, there is another important constant $\phi$ for any given pixel $(x^c, y^c)$ in a given pattern set $[0, N-1]$, it is the phase value $\phi (x^c, y^c)$ of the distorted fringe patterns that is eventually used to calculate the corresponding depth value of the object. The expression of $\phi (x^c, y^c)$ can be inferred from Eq.~\eqref{eq:1.3} as:
   \begin{equation} \label{eq:1.4}
   	\phi (x^c, y^c) = \arctan \frac{\sum_{n=0}^{N-1} I^c_n(x^c, y^c)\sin(\frac{2\pi n}{N})}{\sum_{n=0}^{N-1} I^c_n(x^c, y^c)\cos(\frac{2\pi n}{N})}.
   \end{equation}
 
 The dual-frequency pattern scheme adds a second sinusoidal component to the phase-shifting patterns, as a result, the total number of patterns is still $N$, but each pattern has two sinusoidal components, one is of unit frequency $f_u$, the other is of a high frequency $f_h$ that is used to reduce the impact of noises in the system. If we extend the single-frequency PMP pattern above to the dual-frequency, the intensities of the row pixels from top to bottom would be like an amplitude modulation in which the $f_u$ is frequency of the modulating signal and $f_h$ is the frequency of the carrier wave. According to Liu \textit{et al}., from the projector's point of view, the new dual-frequency pattern is expressed as:
   \begin{equation} \label{eq:1.5}
-  	I^p_n(x^p, y^p) = A^p + B^p_1\cos(2\pi f_h y^p - \frac{2\pi n}{N}) + B^p_2\cos(2\pi f_u y^p - \frac{4\pi n}{N}),
+  	I^p_n(x^p, y^p) = A^p + B^p_1\cos\left(2\pi f_h y^p - \frac{2\pi n}{N}\right) + B^p_2\cos\left(2\pi f_u y^p - \frac{4\pi n}{N}\right),
   \end{equation}
-where the $I^p_n$ is the intensity of the pixel $(x^p, y^p)$ in the $n^th$ pattern. Similarly the intensity equation of the camera coordinates used for reconstruction becomes:
+where the $I^p_n$ is the intensity of the pixel $(x^p, y^p)$ in the $n^{th}$ pattern. Similarly the intensity equation of the camera coordinates used for reconstruction becomes:
  \begin{equation} \label{eq:1.6}
-  	I^c_n(x^c, y^c) =  A^c(x^c, y^c) + B^c_1(x^c, y^c)\cos(\phi_h(x^c, y^c) - \frac{2\pi n}{N}) + B^c_2(x^c, y^c)\cos(\phi_u(x^c, y^c) - \frac{4\pi n}{N}).
+  	I^c_n(x^c, y^c) =  A^c(x^c, y^c) + B^c_1(x^c, y^c)\cos\left(\phi_h(x^c, y^c) - \frac{2\pi n}{N}\right) + B^c_2(x^c, y^c)\cos\left(\phi_u(x^c, y^c) - \frac{4\pi n}{N}\right).
   \end{equation}
-Likewise the $B^c_1$, $B^c_2$ and $\phi_h$, $\phi_u$ can be derived from eq. \eqref{eq:1.3} and eq. \eqref{eq:1.4} respectively,
+Likewise the $B^c_1$, $B^c_2$ and $\phi_h$, $\phi_u$ can be derived from Eq.~\eqref{eq:1.3} and Eq. \eqref{eq:1.4} respectively,
   \begin{equation} \label{eq:1.7}
   	B^c_m(x^c, y^c) = \frac{2}{N}\sqrt{\left[\sum_{n=0}^{N-1}I_n^c(x^c, y^c)\sin (m\frac{2\pi n}{N})\right]^2 + \left[\sum_{n=0}^{N-1}I_n^c(x^c, y^c)\cos (m\frac{2\pi n}{N})\right]^2},
   \end{equation}
 where $m = 1\: or\: 2$ in this case,
  \begin{equation} \label{eq:1.8}
-  	\phi_h (x^c, y^c) = \arctan \frac{\sum_{n=0}^{N-1} I^c_n(x^c, y^c)\sin(\frac{2\pi n}{N})}{\sum_{n=0}^{N-1} I^c_n(x^c, y^c)\cos(\frac{2\pi n}{N})},
+  	\phi_h (x^c, y^c) = \frac{\arctan \frac{\sum_{n=0}^{N-1} I^c_n(x^c, y^c)\sin(\frac{2\pi n}{N})}{\sum_{n=0}^{N-1} I^c_n(x^c, y^c)\cos(\frac{2\pi n}{N})} + \pi}{2\pi},
   \end{equation}
  \begin{equation} \label{eq:1.9}
-  	\phi_u (x^c, y^c) = \arctan \frac{\sum_{n=0}^{N-1} I^c_n(x^c, y^c)\sin(\frac{4\pi n}{N})}{\sum_{n=0}^{N-1} I^c_n(x^c, y^c)\cos(\frac{4\pi n}{N})}.
+  	\phi_u (x^c, y^c) = \frac{\arctan \frac{\sum_{n=0}^{N-1} I^c_n(x^c, y^c)\sin(\frac{4\pi n}{N})}{\sum_{n=0}^{N-1} I^c_n(x^c, y^c)\cos(\frac{4\pi n}{N})} + \pi}{2\pi}.
   \end{equation}
-Now in eqns.~\eqref{eq:1.8} and \eqref{eq:1.9}, $\phi_h$ and $\phi_u$ are confined within $[-\pi, \pi]$; however, the actual range of $\phi_h$ is $[0, 2f_h\pi]$, the  $\phi_h$ is called the wrapped phase. Unwrapping the $\phi_h$ to $\tilde{\phi_h} \in [0, 2f_h\pi]$ can lead to a more accurate conversion from phase to depth.  In order to obtain $\tilde{\phi_h}$, the value of $\phi_u$ is used as the following equation shows,
+Now in Eq.~\eqref{eq:1.8} and \eqref{eq:1.9}, $\phi_h$ and $\phi_u$ are confined within $[0, 1]$; however, the actual range of $\phi_h$ is $[0, f_h]$, the  $\phi_h$ is called the wrapped phase. Unwrapping the $\phi_h$ to $\tilde{\phi}_h \in [0, f_h]$ can lead to a more accurate conversion from phase to depth.  In order to obtain $\tilde{\phi}_h$, the value of $\phi_u$ is used as the following equation shows,
   \begin{equation} \label{eq:1.10}
-	 \tilde{\phi_h} = \phi_h + 2\pi \lfloor\frac{\phi_u}{2\pi/f_h}\rfloor,
+	 \tilde{\phi}_h = \phi_h + \lfloor f_h \phi_u - \phi_h + 0.5 \rfloor,
   \end{equation}
 where the $\lfloor \rfloor$ is the symbol of floor function which outputs the greatest integer less than or equal to the value enclosed.
 
+Now that we have unambiguous, unwrapped phase term, $\tilde{\phi}_h$, we can derive the 3D point from our scan according to Liu \textit{et al}. ~\cite{liuk10}:
+\begin{equation}\label{eq:1.11}
+	Z^w = M_z(x^c, y^c) + \frac{N_z(x^c, y^c)}{C(x^c, y^c) \tilde{\phi}_h + 1},
+\end{equation}
+and then
+\begin{equation}\label{eq:1.12}
+	X^w = E_x(x^c, y^c)Z^w + F_x(x^c, y^c),
+\end{equation}
+\begin{equation}\label{eq:1.13}
+	Y^w = E_y(x^c, y^c)Z^w + F_y(x^c, y^c).
+\end{equation}
+where the coefficients $M_z$, $N_z$, $E_x$, $E_y$, $F_x$, $F_y$ and $C$ are determined during calibration of the projector and cameras lenses, assuming pin-hole lens models.
+
+
 \section{Dual-Projector Phase Measuring Profilometry}
-Our FPGA-based dual-projector Structured Light Illumination (SLI) system generates two synchronized SLI patterns which are then fed to two projectors via HDMI. Meanwhile, the projectors and the camera need to be synchronized to ensure that the camera images are taken at the right timing. The system diagram is shown in Figure \ref{fig:sub2}. The two SLI pattern generators output two synchronized phase-shifting fringe patterns which are later encoded into TMDS data streams by the HDMI transmitters and eventually move to projectors. 
+In this paper, we apply the dual-frequency PMP to a dual-projector system in which the SLI patterns in Eq.~\eqref{eq:1.5} are jointly generated by two separate projectors A and B. The projector A produces the high frequency component while the projector B only produces the unit frequency component. Thus their intensity equations can be expressed respectively as:
+   \begin{equation} \label{eq:1.14}
+  	I^{p_a}_n(x^{p_a}, y^{p_a}) = A^{p_a} + B^{p_a}_1\cos\left(2\pi f_h y^{p_a} - \frac{2\pi n}{N}\right), and 
+  \end{equation}
+   \begin{equation} \label{eq:1.15}
+  	I^{p_b}_n(x^{p_b}, y^{p_b}) = A^{p_b} + B^{p_b}_2\cos\left(2\pi f_u y^{p_b} - \frac{4\pi n}{N}\right).
+  \end{equation}
+During the reconstruction process, the Eq.~\eqref{eq:1.6} to Eq.~\eqref{eq:1.9} remain the same as what they are in the single-projector system, because the dual-projector system does not make it much different from the camera's point of view. However, the Eq.~\eqref{eq:1.10} is not applicable for the dual-projector system anymore. 
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%replacement equation 10
+%we populate this table based on data collected during calibration...
+Instead, we use a lookup table (LUT) to acquire the unwrapped phase, as Eq.~{eq:1.16} shows,
+
+\begin{equation} \label{eq:1.16}
+  	\tilde{\phi}_d(x^c, y^c) = LUT[\phi_{p_b}, x^c, y^c] + \phi_{p_a},
+  \end{equation}
+where the $\tilde{\phi}_d$ is the unwrapped phase of the pixel $(x^c, y^c)$, $\phi_{p_a}$ is the phase derived from projector A and $\phi_{p_b}$ is the phase derived from projector B.
+The LUT is populated from the data collected during calibration.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+The procedure for calibrating our scanner is illustrated in Fig.~\ref{Fig:20} and involves sweeping a rigid, flat checkerboard pattern in correspondence with the $XY$-plane and moving in fixed, small-steps through the scan volume from the nearest plane where $Z = Z_{min}$ to the farthest plane at $Z = Z_{max}$.  The physical moving of the checkerboard pattern is performed using a motorized rail like the Velmex Bi-slide and VXM controller.  These rails can be configured to move with a positional accuracy of 0.076~mm and repeatability of 0.005~mm.  The specific checkerboard pattern that we use the CalTag calibration target introduced by Atcheson \textit{et al}.~\cite{atch10} where, inside each square, is a unique 16-bit codeword identifying and absolute world $(X_w,Y_w)$ coordinates of each squares four corners.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\begin{figure}[!t]
+\centerline{\includegraphics[width=6.6in]{Figures/SLICalibrationDual}}
+\vspace{0.1in}
+\caption{Illustration showing dual-projector scanner calibration.}
+\label{Fig:20}
+\end{figure} 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+As stated above, the calibration procedure involves iteratively moving the CalTag target along the Z-axis from $Z_{min}$ to $Z_{max}$ such that, at each step, we perform a structured light scan with each camera pixel defined according to:
+\begin{equation}
+I_c[x^c, y^c, k] = [X_w[x^c, y^c, k], Y_w[x^c, y^c, k], Z_w[x^c, y^c, k], P_a[x^c, y^c, k], P_b[x^c, y^c, k]]
+\label{calEqn}
+\end{equation}
+where $x^c$ and $y^c$ are the pixel’s column and row coordinates; $k$ is the step index for the current scan; $X_w[x^c, y^c, k]$ and $Y_w[x^c, y^c, k]$ are the CalTag grid coordinate at the intersection of the CalTag target’s surface and the camera pixel’s line-of-sight; $Z_w[x^c, y^c, k]$ is the Z-position of the rail; and $P[x^c, y^c, k]$ is the phase value of the projected PMP sequence in the line-of-sight of the camera pixel.  Once complete, we then have a 3D texture composed of a stack of 4-color digital images that are the height and width of our camera and $K$ layers deep with $P[x^c, y^c, k]$ ranging from $P_{min}[x^c, y^c]$ to $P_{max}[x^c, y^c]$ as $Z_w[x^c, y^c, k]$ ranges from $Z_{min}[x^c, y^c]$ to $Z_{max}[x^c, y^c]$.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%NOW LET"S LOOK AT A PLOT OF PA VS PB IN THE DUAL PROJECTOR SYSTEM AND COMPARE IT WITH A PLOT OF PLOW VS PHIGH IN THE SINGLE PROJECTOR SYSTEM
+%IN LIGHT OF THIS PLOT, WE POPULATE THE LUT FROM EQN. (NEW 10) SUCH THAT LUT[PLOW] = FUNCTION EQUAL TO PHIGH
+Fig.~\ref{Fig:3} illustrates the relationship between the $\phi_f$ and $\phi_h$ for the single-projector PMP system (left) and the dual-projector PMP system (right) respectively.
+\begin{figure}[!t]
+  \includegraphics[width=\linewidth]{phase.png}
+  \caption{$\phi_f$ vs. $\phi_u$ in single-projector system (left) and dual-projector system (right)}
+  \label{Fig:3}
+\end{figure}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+\section{System Implementation}
+Our FPGA-based dual-projector Structured Light Illumination (SLI) system generates two synchronized SLI patterns which are then fed to two projectors via HDMI. Meanwhile, the projectors and the camera need to be synchronized to ensure that the camera images are taken at the right timing. A photo of our system and the system diagram are shown in Fig.~\ref{fig:sub1} and Fig.~\ref{fig:sub2}. The two SLI pattern generators output two synchronized phase-shifting fringe patterns which are later encoded into TMDS data streams by the HDMI transmitters and eventually move to projectors. 
 
 %\begin{figure}
  %  \begin{center}
@@ -158,7 +242,7 @@ Our FPGA-based dual-projector Structured Light Illumination (SLI) system generat
 \begin{subfigure}{.5\textwidth}
   \centering
   %\includegraphics[width=.5\linewidth]{mojo.jpg}
-  \includegraphics[height=6cm]{mojo.jpg}
+  \includegraphics[height=6cm, angle=90]{mojo.jpg}
   \caption{A photo of the system}
   \label{fig:sub1}
 \end{subfigure}%
@@ -173,30 +257,30 @@ Our FPGA-based dual-projector Structured Light Illumination (SLI) system generat
 \label{Fig:2}
 \end{figure}
 
-HDMI is the abbreviation of High-Definition Multimedia Interface, it is one of the most popular display interfaces. The newest release, HDMI Version 2.1 supports up to $10K$ video at $120 Hz$. A standard HDMI connector has 19 pins as listed in Table \ref{Tab:1}. Data channel 2, 1, 0 are mainly used to transfer red, green and blue components of the video respectively. The HDMI does not only transfer video data, but also some auxiliary data, for example audio data, packet header. The auxiliary data, video data as well as some control signals are encoded in data channel 2, 1, 0 and then digitally transmitted in serial. In between any two adjacent video periods, one or more data island period and control period are inserted. 
+HDMI is the abbreviation of High-Definition Multimedia Interface, it is one of the most popular display interfaces. The newest release, HDMI Version 2.1 supports up to $10K$ video at $120 Hz$. A standard HDMI connector has 19 pins \cite{hdmi14}, Data channel 2, 1, 0 are mainly used to transfer red, green and blue components of the video respectively. The HDMI does not only transfer video data, but also some auxiliary data, for example audio data, packet header. The auxiliary data, video data as well as some control signals are encoded in data channel 2, 1, 0 and then digitally transmitted in serial. In between any two adjacent video periods, one or more data island period and control period are inserted. 
 
 % Please add the following required packages to your document preamble:
 % \usepackage[table,xcdraw]{xcolor}
 % If you use beamer only pass "xcolor=table" option, i.e. \documentclass[xcolor=table]{beamer}
-\begin{table}[!b]
-\caption{HDMI pinout}
-\label{Tab:1}
-\centerline{
-\begin{tabular}{|c|l|}
-\hline
-\rowcolor[HTML]{C0C0C0} 
-{\color[HTML]{000000} \textbf{PIN}} & \multicolumn{1}{c|}{\cellcolor[HTML]{C0C0C0}{\color[HTML]{000000} \textbf{DATA}}} \\ \hline
-\multicolumn{1}{|l|}{Data2+, Data2 Shield, Data2-} & red pixel component, CTL2, CTL3 and auxiliary data \\ \hline
-\multicolumn{1}{|l|}{Data1+, Data1 Shield, Data1-} & green pixel component, CTL0, CTL1 and auxiliary data \\ \hline
-\multicolumn{1}{|l|}{Data0+, Data0 Shield, Data0-} & blue pixel component, HSYNC, VSYNC and auxiliary data \\ \hline
-\multicolumn{1}{|l|}{Clock+, Clock Shield, Clock-} & pixel clock \\ \hline
-SCL, SDA & DDC channel, the source reads the EDID from the sink \\ \hline
-CEC & data or commands from remote control \\ \hline
-Reserved/HEAC+ & reserved for v1.3 and before, Ethernet and audio since v1.4 \\ \hline
-HOT PLUG DETECT/HEAC- & indicate the hot plug or paired with HEAC+ \\ \hline
-+5V, Ground & power from external or HDMI source, ground \\ \hline
-\end{tabular}\\}
-\end{table}
+%\begin{table}[!b]
+%\caption{HDMI pinout}
+%\label{Tab:1}
+%\centerline{
+%\begin{tabular}{|c|l|}
+%\hline
+%\rowcolor[HTML]{C0C0C0} 
+%{\color[HTML]{000000} \textbf{PIN}} & \multicolumn{1}{c|}{\cellcolor[HTML]{C0C0C0}{\color[HTML]{000000} \textbf{DATA}}} \\ \hline
+%\multicolumn{1}{|l|}{Data2+, Data2 Shield, Data2-} & red pixel component, CTL2, CTL3 and auxiliary data \\ \hline
+%\multicolumn{1}{|l|}{Data1+, Data1 Shield, Data1-} & green pixel component, CTL0, CTL1 and auxiliary data \\ \hline
+%\multicolumn{1}{|l|}{Data0+, Data0 Shield, Data0-} & blue pixel component, HSYNC, VSYNC and auxiliary data \\ \hline
+%\multicolumn{1}{|l|}{Clock+, Clock Shield, Clock-} & pixel clock \\ \hline
+%SCL, SDA & DDC channel, the source reads the EDID from the sink \\ \hline
+%CEC & data or commands from remote control \\ \hline
+%Reserved/HEAC+ & reserved for v1.3 and before, Ethernet and audio since v1.4 \\ \hline
+%HOT PLUG DETECT/HEAC- & indicate the hot plug or paired with HEAC+ \\ \hline
+%+5V, Ground & power from external or HDMI source, ground \\ \hline
+%\end{tabular}\\}
+%\end{table}
 
 In HDMI, there are six important control signals, HSYNC indicates the beginning and end of a row in a frame of the video, VSYNC indicates the beginning and end of a frame, CTL0~CTL3 indicate the data type of the following data period. The three data channels are transmitted through a differential signaling technology called Transition-Minimized Differential Signaling (TMDS) to reduce the impact of electromagnetic interference and enable high clock skew tolerance. %Another common application of TMDS is in the Digital Visual Interface (DVI).
 
@@ -204,43 +288,17 @@ The 5 volts power signal is provided by the HDMI source or an external source, w
 
 The pin CEC is used to add some advanced functionalities for the HDMI systems. Usually it is a remote control that issues different high-level commands to the devices connected by HDMI cables. CEC stands for Consumer Electronics Control, it is also a one-wire bus protocol, the implementation of CEC is optional, because not all the HDMI devices support this feature. Since HDMI 1.4, the previously reserved pin has become the HDMI Ethernet and Audio Returen Channel (HEAC). While it is in audio return channel mode, only the HEAC+ line is used to transmit audio data; in HDMI Ethernet channel mode, the HEAC+ line pairs up with the HEAC- line as a differential signal to establish a high speed Ethernet communication.
 
-To obtain the uncommon 73.25~MHz pixel clock for $800\times 600$ pixel video at 120~Hz which cannot be generated by the Spartan 6 of the Mojo board, we utilize a programmable oscillator, the Si514. By configuring the internal registers through $I^2C$ bus, Si514 can generate any frequency from 100~kHz to 250~MHz with a tuning resolution of 0.026 ppb. Therefore, an $I^2C$ master controller was incorporated into the system...what parameters did you use to get the clock rate with this oscillator. 
+To obtain the uncommon 73.25~MHz pixel clock for $800\times 600$ pixel video at 120~Hz which cannot be generated by the Spartan 6 of the Mojo board, we utilize a programmable oscillator, the Si514. By configuring the internal registers through $I^2C$ bus, Si514 can generate any frequency from 100~kHz to 250~MHz with a tuning resolution of 0.026 ppb. Therefore, an $I^2C$ master controller was incorporated into the system.%..what parameters did you use to get the clock rate with this oscillator. 
 
-Now in order to linearize the projector to avoid the deleterious effects of gamma distortion~\cite{gamm10} on our projected PMP patterns, we use the EEPROM of the Mojo board to upload calibrated tone correction curves for our target projector...JUST SAY SOMETHING ABOUT HOW THE LUT IS PROGRAMMED OVER SERIAL COMMUNICATION WITH MICROCONTOLLER AND THAT IT IS READ DURING BOOT UP OF THE FPGA TO THE INTERNAL LUT INSIDE YOUR BIT FILE...This LUT can be hard-coded into the configuration file of the FPGA, but the drawback is that once the lookup table changes, the FPGA configuration file has to be changed. It is quite inconvenient especially when the system needs to be often applied to a different projector, because generating a new FPGA configuration file requires special software tool and takes more time. We devise a method that the user stores the LUT in an separate EEPROM chip which can be erased and written by any computer via some general serial or USB tools, and the SPI master module in the FPGA reads the EEPROM every time the system  is powered on. With this approach, users can load new LUTs much faster and easier.
+Now in order to linearize the projector to avoid the deleterious effects of gamma distortion~\cite{gamm10} on our projected PMP patterns, we use the EEPROM on the Mojo board to upload calibrated tone correction curves for our target projector.
+%..JUST SAY SOMETHING ABOUT HOW THE LUT IS PROGRAMMED OVER SERIAL COMMUNICATION WITH MICROCONTOLLER AND THAT IT IS READ DURING BOOT UP OF THE FPGA TO THE INTERNAL LUT INSIDE YOUR BIT FILE..
+This LUT can be hard-coded into the configuration file of the FPGA, but the drawback is that once the lookup table changes, the FPGA configuration file has to be changed. It is quite inconvenient especially when the system needs to be often applied to a different projector, because generating a new FPGA configuration file requires special development tool and takes more time. We devise an approach that the user stores the LUT in a separate EEPROM chip which can be erased and written by any computer via some general serial or USB tools, and the SPI master module in the FPGA reads the EEPROM every time the system  is powered on. With this approach, users can load new LUTs much faster and easier.
 
-The camera synchronization module controls the timing of the camera trigger signal...DESCRIBE THE GPIO CONNECTIONS BETWEEN CAMERA AND PROJECTOR.  IN PARTICULAR, YOU RECEIVE AN ENABLE BIT WHICH IS A PROGRAMMABLE GENERAL PURPOSE BIT FROM THE CAMERA TO THE FPGA THAT THE PC CAN ENABLE WHEN THE HOST PC IS READY TO PERFORM A SCAN.  YOU THEN START PROJECTING THE FIRST PATTERN IN THE SEQUENCE AND WAIT FOR A SECOND BIT, THE FRAME TRIGGER READY BIT FROM THE CAMERA TO THE FPGA, THAT TELLS THE FPGA THAT IT IS READY FOR A TRIGGER.  ON THE SUBSEQUENT VERTICAL SYNC, THE FPGA SENDS OUT A TRIGGER SIGNAL TO THE CAMERA.  THE FPGA THEN STARTS PROJECTING THE NEXT PATTERN IN THE SEQUENCE WHILE WAITING FOR THE FRAME TRIGGER READY TO GO HIGH AGAIN.  WHEN IT DOES, THE FPGA WAITS FOR THE NEXT VERTICAL SYNC TO SEND OUT A TRIGGER, MOVING TO THE NEXT PATTERN IN THE SEQUENCE.  IT IS UP TO THE PC TO SET THE TRIGGER DELAY AND EXPOSURE TIME IN ORDER TO CAPTURE THE ONE FRAME OF VIDEO THAT CORRESPONDS TO THE PROJECTED PATTERNS.  HOWEVER, THE TRIGGER READY SIGNAL CONTROLS THE FRAME RATE OF THE PROJECTOR TO INTEGER DIVISIONS OF 120 HZ, SUCH AS 120, 60, 40, 24, ETC DEPENDING ON THE BUS SPEED OF THE CAMERA.  SO A GIGE CAMERA WITH A MAXIMUM OF 25 FPS WILL RUN AT 24 FPS. 
+The camera synchronization module not only controls the timing of the camera trigger, but also monitors the status of the camera. There are three wires that link the camera and the FPGA, they are $ENABLE$, $TRIGGER$ and the $TRIGGER\_READY$. The $ENABLE$ and $TRIGGER\_READY$ are output signals from the camera, which are programmable from the PC connected to the camera. The $TRIGGER$ is an input signal to the camera that is controlled by the FPGA. Initially, the camera pulls the $ENABLE$ high to tell the FPGA that a new scan is about to start, so the FPGA sends the first SLI pattern to the projector. Meanwhile, the rising edge of the $Vertical_Sync$ in HDMI module is passed to the $TRIGGER$, it is this rising edge that triggers the camera's first exposure. During the exposure time, the $TRIGGER\_READY$ is pulled low, which indicates the FPGA that no more triggers should be issued for the camera, because the camera is busy processing the current exposure and not ready for the next shot. Likewise, the projector should keep displaying the same SLI pattern. Once an exposure is done, the $TRIGGER\_READY$ immediately goes high,  which tells the FPGA that the camera is ready for another exposure, so the rising edge of the following $Vertical_Sync$ can be sent to $TRIGGER$ and the next SLI pattern can be sent to the projector.From the PC side, the $TRIGGER\_READY$ is programmed by setting different values to the camera's parameters such as trigger delay and exposure time.
+%..DESCRIBE THE GPIO CONNECTIONS BETWEEN CAMERA AND PROJECTOR.  IN PARTICULAR, YOU RECEIVE AN ENABLE BIT WHICH IS A PROGRAMMABLE GENERAL PURPOSE BIT FROM THE CAMERA TO THE FPGA THAT THE PC CAN ENABLE WHEN THE HOST PC IS READY TO PERFORM A SCAN.  YOU THEN START PROJECTING THE FIRST PATTERN IN THE SEQUENCE AND WAIT FOR A SECOND BIT, THE FRAME TRIGGER READY BIT FROM THE CAMERA TO THE FPGA, THAT TELLS THE FPGA THAT IT IS READY FOR A TRIGGER.  ON THE SUBSEQUENT VERTICAL SYNC, THE FPGA SENDS OUT A TRIGGER SIGNAL TO THE CAMERA.  THE FPGA THEN STARTS PROJECTING THE NEXT PATTERN IN THE SEQUENCE WHILE WAITING FOR THE FRAME TRIGGER READY TO GO HIGH AGAIN.  WHEN IT DOES, THE FPGA WAITS FOR THE NEXT VERTICAL SYNC TO SEND OUT A TRIGGER, MOVING TO THE NEXT PATTERN IN THE SEQUENCE.  IT IS UP TO THE PC TO SET THE TRIGGER DELAY AND EXPOSURE TIME IN ORDER TO CAPTURE THE ONE FRAME OF VIDEO THAT CORRESPONDS TO THE PROJECTED PATTERNS.  HOWEVER, THE TRIGGER READY SIGNAL CONTROLS THE FRAME RATE OF THE PROJECTOR TO INTEGER DIVISIONS OF 120 HZ, SUCH AS 120, 60, 40, 24, ETC DEPENDING ON THE BUS SPEED OF THE CAMERA.  SO A GIGE CAMERA WITH A MAXIMUM OF 25 FPS WILL RUN AT 24 FPS. 
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Calibration}
-The procedure for calibrating our scanner is illustrated in Fig.~\ref{Fig:20} and involves sweeping a rigid, flat checkerboard pattern in correspondence with the $XY$-plane and moving in fixed, small-steps through the scan volume from the nearest plane where $Z = Z_{min}$ to the farthest plane at $Z = Z_{max}$.  The physical moving of the checkerboard pattern is performed using a motorized rail like the Velmex Bi-slide and VXM controller.  These rails can be configured to move with a positional accuracy of 0.076~mm and repeatability of 0.005~mm.  The specific checkerboard pattern that we use the CalTag calibration target introduced by Atcheson et al~\cite{??} where, inside each square, is a unique 16-bit codeword identifying and absolute world $(X_w,Y_w)$ coordinates of each squares four corners.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\begin{figure}
-\centerline{\includegraphics[width=6.6in]{Figures/SLICalibrationDual}}
-\vspace{0.1in}
-\caption{Illustration showing dual-projector scanner calibration.}
-\label{Fig:20}
-\end{figure} 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-As stated above, the calibration procedure involves iteratively moving the CalTag target along the Z-axis from $Z_{min}$ to $Z_{max}$ such that, at each step, we perform a structured light scan with each camera pixel defined according to:
-\begin{equation}
-I_c[r,c,k] = [X_w[r,c,k], Y_w[r,c,k], Z_w[r,c,k], P[r,c,k]]
-\label{calEqn}
-\end{equation}
-where $r$ and $c$ are the pixel’s row and column coordinate; $k$ is the step index for the current scan; $X_w[r,c,k]$ and $Y_w[r,c,k]$ are the CalTag grid coordinate at the intersection of the CalTag target’s surface and the camera pixel’s line-of-sight; $Z_w[r,c,k]$ is the Z-position of the rail; and $P[r,c,k]$ is the phase value of the projected PMP sequence in the line-of-sight of the camera pixel.  Once complete, we then have a 3D texture composed of a stack of 4-color digital images that are the height and width of our camera and $K$ layers deep with $P[r,c,k]$ ranging from $P_{min}[r,c]$ to $P_{max}[r,c]$ as $Z_w[r,c,k]$ ranges from $Z_{min}[r,c]$ to $Z_{max}[r,c]$.
-
-Given the above data defined in eqn.~\ref{calEqn}, we now want to define a look-up-table as a 3D texture where each pixel in the 3D texture is defined according to:
-\begin{equation}
-LUT[r,c,\tilde{p}[r,c]] = [X_w[r,c,\tilde{p}[r,c]], Y_w[r,c,\tilde{p}[r,c]], Z_w[r,c,\tilde{p}[r,c]]]
-\end{equation}
-where $r$ and $c$ are the pixel’s row and column coordinate and $\tilde{p}[r,c]$ is the normalized phase value observed by the pixel during the scan, which is derived from the measured phase, $p[r,c]$, according to:
-\begin{equation}
-\tilde{p}[r,c] = \frac{p[r,c] - P_{min}[r,c]}{P_{max}[r,c] - P_{min}[r,c]}.
-\end{equation}
-Note that since $P[r,c,k]$ ranged from $P_{min}[r,c]$ to $P_{max}[r,c]$, $\tilde{p}[r,c]$ ranges from 0 to 1.  So $LUT[r,c]$ is derived from $I_c[r,c]$ by interpolation along the $k$-axis versus $P[r,c]$ instead of $k$. Luckily, all of this can be done using an OpenGL shader and the texture command~\cite{??}.
 
 
 
