@@ -61,7 +61,7 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \begin{abstract}
-This document shows the desired format and appearance of a manuscript prepared for the Proceedings of the SPIE.  It contains general formatting instructions and hints about how to use LaTeX.  The LaTeX source file that produced this document, {\tt article.tex} (Version 3.3), provides a template, used in conjunction with {\tt spie.cls} (Version 3.3).  
+This paper introduces a dual-projector phase measuring profilometry that adds a second projector in a traditional structured light illumination system to improve the overall quality of the 3D scanning. With this method, two projectors are synchronized to a single camera, but each one projects structured light patterns of its unique frequency. In particular, a detailed system implementation in hardware level is described. Moreover, the major difference between the phase unwrapping of dual-projector system and the single-projector system is discussed, and a LUT-based phase unwrapping scheme for this dual-projector phase measuring profilometry system is proposed. 
 \end{abstract}
 
 %>>>> Include a list of keywords after the abstract 
@@ -175,7 +175,7 @@ where the $\tilde{\phi}_d$ is the unwrapped phase of the pixel $(x^c, y^c)$, $\p
 The LUT is populated from the data collected during calibration.
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
-<<<<<<< HEAD
+%<<<<<<< HEAD
 The procedure for calibrating our scanner is illustrated in Fig.~\ref{Fig:20} and involves sweeping a rigid, flat checkerboard pattern in correspondence with the $XY$-plane and moving in fixed, small-steps through the scan volume from the nearest plane where $Z = Z_{min}$ to the farthest plane at $Z = Z_{max}$.  The physical moving of the checkerboard pattern is performed using a motorized rail like the Velmex Bi-slide and VXM controller.  These rails can be configured to move with a positional accuracy of 0.076~mm and repeatability of 0.005~mm.  The specific checkerboard pattern that we use the CalTag calibration target introduced by Atcheson \textit{et al}.~\cite{atch10} where, inside each square, is a unique 16-bit codeword identifying and absolute world $(X_w,Y_w)$ coordinates of each squares four corners.
 =======
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -183,7 +183,7 @@ The procedure for calibrating our scanner is illustrated in Fig.~\ref{Fig:20} an
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Calibration}
 The procedure for calibrating our scanner is illustrated in Fig.~\ref{Fig:20} and involves sweeping a rigid, flat checkerboard pattern, in correspondence with the $XY$-plane, in fixed, small-steps through the scan volume from the nearest plane at $Z = Z_{min}$ to the farthest plane at $Z = Z_{max}$.  The physical moving of the checkerboard pattern is performed using a motorized rail like the Velmex Bi-slide and VXM controller.  These rails can be configured to move with a positional accuracy of 0.076~mm and repeatability of 0.005~mm.  The specific checkerboard pattern that we use is the CalTag calibration target introduced by Atcheson et al~\cite{??} where, inside each square, is a unique 16-bit codeword identifying and absolute world coordinates,  $(X_w,Y_w)$, of each square's four corners.
->>>>>>> 716b5f75bdda6aa6bf4630801fbe0c1071de81a3
+%>>>>>>> 716b5f75bdda6aa6bf4630801fbe0c1071de81a3
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure}[!t]
@@ -196,7 +196,7 @@ The procedure for calibrating our scanner is illustrated in Fig.~\ref{Fig:20} an
 
 As stated above, the calibration procedure involves iteratively moving the CalTag target along the Z-axis from $Z_{min}$ to $Z_{max}$ such that, at each step, we perform a structured light scan with each camera pixel defined according to:
 \begin{equation}
-<<<<<<< HEAD
+%<<<<<<< HEAD
 I_c[x^c, y^c, k] = [X_w[x^c, y^c, k], Y_w[x^c, y^c, k], Z_w[x^c, y^c, k], P_a[x^c, y^c, k], P_b[x^c, y^c, k]]
 \label{calEqn}
 \end{equation}
@@ -308,40 +308,40 @@ The camera synchronization module not only controls the timing of the camera tri
 
 
 
-=======
-I_c[r,c,k] = [X_w[r,c,k], Y_w[r,c,k], Z_w[k], P[r,c,k]]
-\label{calEqn}
-\end{equation}
-where $r$ and $c$ are the pixel's row and column coordinate; $k$ is the step index for the current scan; $X_w[r,c,k]$ and $Y_w[r,c,k]$ are the CalTag grid coordinate at the intersection of the CalTag target's surface and the camera pixel's line-of-sight; $Z_w[k]$ is the Z-position of the rail; and $P[r,c,k]$ is the phase value of the projected PMP sequence in the line-of-sight of the camera pixel.  Once complete, we then have a 3D texture composed of a stack of 4-color digital images that are the height and width of our camera and $K$ layers deep with $P[r,c,k]$ ranging from $P_{min}[r,c]$ to $P_{max}[r,c]$ as $Z_w[k]$ ranges from $Z_{min}$ to $Z_{max}$.
-
-In order to parameterize the relationships between channels, let's define $\vec{x}_{r,c}$, $\vec{y}_{r,c}$, and $\vec{z}_{r,c}$ as the $K$-dimensional vector composed of $X_w[r,c,k]$, $Y_w[r,c,k]$, and $Z_w[k]$, and let's define $\vec{p}_{r,c}$ as the normalized phase coordinates derived from $P[r,c,k]$ according to:
-\begin{equation}
-\vec{p}_{r,c}[k] = \frac{P[r,c,k] - P_{min}[r,c]}{P_{max}[r,c] - P_{min}[r,c]}.
-\end{equation}
-From these vectors, we can derive a plot of any pixel channel versus any other channel.  For example, we can plot $\vec{x}_{r,c}$ versus $\vec{z}_{r,c}$ or, more importantly, $\vec{z}_{r,c}$ versus $\vec{p}_{r,c}$.  Assuming the pin-hole lens model for both the camera and the projector, we know from Liu~\textit{et al} that the relationship between $\vec{x}_{r,c}$ and $\vec{z}_{r,c}$ as well as $\vec{y}_{r,c}$ and $\vec{z}_{r,c}$ are given by the straight line relationships:
-\begin{eqnarray}
-\vec{x}_{r,c} & = & A_{r,c} \vec{z}_{r,c} + B_{r,c}, \mbox{ and} \\
-\vec{y}_{r,c} & = & C_{r,c} \vec{z}_{r,c} + D_{r,c},
-\label{pinHoleEqnXY}
-\end{eqnarray}
-where $A_{r,c}$, $B_{r,c}$, $C_{r,c}$, and $D_{r,c}$ are scalar constants representing the slope and intercepts found by best-fitting straight lines between recorded points; furthermore, the relationship between $\vec{z}_{r,c}$ versus $\vec{p}_{r,c}$ is given by the equation:
-\begin{equation}
-\tilde{z}[r,c] = \frac{E_{r,c} \vec{p}_{r,c} + F_{r,c}}{G_{r,c} \vec{p}_{r,c} + H_{r,c}},
-\label{pinHoleEqnPZ}
-\end{equation}
-where $E_{r,c}$, $F_{r,c}$, $G_{r,c}$, and $H_{r,c}$ are scalar constants found either through singular value decomposition~\cite{??} or the pseudo-inverse~\cite{??}. In situations where the lens of either the projector or the camera are not accurately modeled by the pin-hole lens model, we can replace eqn.~\eqref{pinHoleEqnPZ} with a more flexible fourth-order polynomial model defined as:
-\begin{equation}
-\tilde{z}[r,c] = E_{r,c} \vec{p}_{r,c}^{~4} + F_{r,c} \vec{p}_{r,c}^{~3} + G_{r,c} \vec{p}_{r,c}^{~2} + H_{r,c} \vec{p}_{r,c} + I_{r,c},
-\label{plyHoleEqn}
-\end{equation}
-where $E_{r,c}$, $F_{r,c}$, $G_{r,c}$, $H_{r,c}$, and $I_{r,c}$ are found using a least-squares polynomial fitting algorithm.  Equation~\eqref{pinHoleEqnXY} need not change since the line-of-sight of any camera pixel is a straight line regardless of any lens distortion.
->>>>>>> 716b5f75bdda6aa6bf4630801fbe0c1071de81a3
-
-Now as an alternative to parameterizing our calibration data by eqns.~\eqref{pinHoleEqnXY}-\eqref{plyHoleEqn}, a wholly different approach is to build a 3D look-up-table indexed by the normalized phase values acquired during a scan. This is achieved by generating a set of plots between the world coordinates in $\vec{x}_{r,c}$, $\vec{y}_{r,c}$, and $\vec{z}_{r,c}$ versus $\vec{p}_{r,c}$ and then resampling them along equal increments of the $\vec{p}_{r,c}$ axis, keeping in mind that $\vec{x}_{r,c}$, $\vec{y}_{r,c}$, $\vec{z}_{r,c}$, and $\vec{p}_{r,c}$ are currently recorded along equal increments along $\vec{z}_{r,c}$.  Keeping in mind that this interpolation can be with greater or fewer samples, $L$, than the original collected data with $K$ layers.  Doing so, we define our look-up-table as a 3D texture according to:
-\begin{equation}
-LUT[r,c,l] = [X_w[r,c,l], Y_w[r,c,l], Z_w[r,c,l]]
-\end{equation}
-where $r$ and $c$ are the pixel's row and column coordinate and $l$ is the resampled step index replacing $k$. The benefits of using the look-up-table over the parameterized model is that it avoids the error associated with inappropriate parameterization of lens distortion as well as detrimental impact of phase distortions such as gamma~\cite{??} as well as dithering noise caused by using projector defocus to blur the pixels of a binary DMD pattern~\cite{??}. The only condition is that the phase image must be monotonic. With regards to real-time performance, the 3D look-up-table is easily implemented on an OpenGL shader using the {\em texture} function~\cite{??}.
+%=======
+%I_c[r,c,k] = [X_w[r,c,k], Y_w[r,c,k], Z_w[k], P[r,c,k]]
+%\label{calEqn}
+%\end{equation}
+%where $r$ and $c$ are the pixel's row and column coordinate; $k$ is the step index for the current scan; $X_w[r,c,k]$ and $Y_w[r,c,k]$ are the CalTag grid coordinate at the intersection of the CalTag target's surface and the camera pixel's line-of-sight; $Z_w[k]$ is the Z-position of the rail; and $P[r,c,k]$ is the phase value of the projected PMP sequence in the line-of-sight of the camera pixel.  Once complete, we then have a 3D texture composed of a stack of 4-color digital images that are the height and width of our camera and $K$ layers deep with $P[r,c,k]$ ranging from $P_{min}[r,c]$ to $P_{max}[r,c]$ as $Z_w[k]$ ranges from $Z_{min}$ to $Z_{max}$.
+%
+%In order to parameterize the relationships between channels, let's define $\vec{x}_{r,c}$, $\vec{y}_{r,c}$, and $\vec{z}_{r,c}$ as the $K$-dimensional vector composed of $X_w[r,c,k]$, $Y_w[r,c,k]$, and $Z_w[k]$, and let's define $\vec{p}_{r,c}$ as the normalized phase coordinates derived from $P[r,c,k]$ according to:
+%\begin{equation}
+%\vec{p}_{r,c}[k] = \frac{P[r,c,k] - P_{min}[r,c]}{P_{max}[r,c] - P_{min}[r,c]}.
+%\end{equation}
+%From these vectors, we can derive a plot of any pixel channel versus any other channel.  For example, we can plot $\vec{x}_{r,c}$ versus $\vec{z}_{r,c}$ or, more importantly, $\vec{z}_{r,c}$ versus $\vec{p}_{r,c}$.  Assuming the pin-hole lens model for both the camera and the projector, we know from Liu~\textit{et al} that the relationship between $\vec{x}_{r,c}$ and $\vec{z}_{r,c}$ as well as $\vec{y}_{r,c}$ and $\vec{z}_{r,c}$ are given by the straight line relationships:
+%\begin{eqnarray}
+%\vec{x}_{r,c} & = & A_{r,c} \vec{z}_{r,c} + B_{r,c}, \mbox{ and} \\
+%\vec{y}_{r,c} & = & C_{r,c} \vec{z}_{r,c} + D_{r,c},
+%\label{pinHoleEqnXY}
+%\end{eqnarray}
+%where $A_{r,c}$, $B_{r,c}$, $C_{r,c}$, and $D_{r,c}$ are scalar constants representing the slope and intercepts found by best-fitting straight lines between recorded points; furthermore, the relationship between $\vec{z}_{r,c}$ versus $\vec{p}_{r,c}$ is given by the equation:
+%\begin{equation}
+%\tilde{z}[r,c] = \frac{E_{r,c} \vec{p}_{r,c} + F_{r,c}}{G_{r,c} \vec{p}_{r,c} + H_{r,c}},
+%\label{pinHoleEqnPZ}
+%\end{equation}
+%where $E_{r,c}$, $F_{r,c}$, $G_{r,c}$, and $H_{r,c}$ are scalar constants found either through singular value decomposition~\cite{??} or the pseudo-inverse~\cite{??}. In situations where the lens of either the projector or the camera are not accurately modeled by the pin-hole lens model, we can replace eqn.~\eqref{pinHoleEqnPZ} with a more flexible fourth-order polynomial model defined as:
+%\begin{equation}
+%\tilde{z}[r,c] = E_{r,c} \vec{p}_{r,c}^{~4} + F_{r,c} \vec{p}_{r,c}^{~3} + G_{r,c} \vec{p}_{r,c}^{~2} + H_{r,c} \vec{p}_{r,c} + I_{r,c},
+%\label{plyHoleEqn}
+%\end{equation}
+%where $E_{r,c}$, $F_{r,c}$, $G_{r,c}$, $H_{r,c}$, and $I_{r,c}$ are found using a least-squares polynomial fitting algorithm.  Equation~\eqref{pinHoleEqnXY} need not change since the line-of-sight of any camera pixel is a straight line regardless of any lens distortion.
+%>>>>>>> 716b5f75bdda6aa6bf4630801fbe0c1071de81a3
+%
+%Now as an alternative to parameterizing our calibration data by eqns.~\eqref{pinHoleEqnXY}-\eqref{plyHoleEqn}, a wholly different approach is to build a 3D look-up-table indexed by the normalized phase values acquired during a scan. This is achieved by generating a set of plots between the world coordinates in $\vec{x}_{r,c}$, $\vec{y}_{r,c}$, and $\vec{z}_{r,c}$ versus $\vec{p}_{r,c}$ and then resampling them along equal increments of the $\vec{p}_{r,c}$ axis, keeping in mind that $\vec{x}_{r,c}$, $\vec{y}_{r,c}$, $\vec{z}_{r,c}$, and $\vec{p}_{r,c}$ are currently recorded along equal increments along $\vec{z}_{r,c}$.  Keeping in mind that this interpolation can be with greater or fewer samples, $L$, than the original collected data with $K$ layers.  Doing so, we define our look-up-table as a 3D texture according to:
+%\begin{equation}
+%LUT[r,c,l] = [X_w[r,c,l], Y_w[r,c,l], Z_w[r,c,l]]
+%\end{equation}
+%where $r$ and $c$ are the pixel's row and column coordinate and $l$ is the resampled step index replacing $k$. The benefits of using the look-up-table over the parameterized model is that it avoids the error associated with inappropriate parameterization of lens distortion as well as detrimental impact of phase distortions such as gamma~\cite{??} as well as dithering noise caused by using projector defocus to blur the pixels of a binary DMD pattern~\cite{??}. The only condition is that the phase image must be monotonic. With regards to real-time performance, the 3D look-up-table is easily implemented on an OpenGL shader using the {\em texture} function~\cite{??}.
 
 
 
