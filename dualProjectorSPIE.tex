@@ -61,7 +61,7 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \begin{abstract}
-This paper introduces a dual-projector phase measuring profilometry that adds a second projector in a traditional structured light illumination system to improve the overall quality of the 3D scanning. With this method, two projectors are synchronized to a single camera, but each one projects structured light patterns of its unique frequency. In particular, a detailed system implementation in hardware level is described. Moreover, the major difference between the phase unwrapping of dual-projector system and the single-projector system is discussed, and a LUT-based phase unwrapping scheme for this dual-projector phase measuring profilometry system is proposed. 
+This paper introduces a dual-projector phase measuring profilometry that adds a second projector in a traditional structured light illumination system to improve the overall quality of the 3D scanning. With this method, two projectors are synchronized to a single camera, but each one projects structured light patterns of its unique frequency. The system performance benifits from a wider projection angle and a doubled light intensity. In particular, a detailed system implementation in hardware level is described. Moreover, the major difference between the phase unwrapping of dual-projector system and the single-projector system is discussed, and a LUT-based phase unwrapping scheme for this dual-projector phase measuring profilometry system is proposed. 
 \end{abstract}
 
 %>>>> Include a list of keywords after the abstract 
@@ -111,9 +111,9 @@ where $I^c_n$ is the intensity of the given pixel $(x^c, y^c)$ in the camera's c
   \end{equation}
 In Eq.~\ref{eq:1.2}, there is another important constant $\phi$ for any given pixel $(x^c, y^c)$ in a given pattern set $[0, N-1]$, it is the phase value $\phi (x^c, y^c)$ of the distorted fringe patterns that is eventually used to calculate the corresponding depth value of the object. The expression of $\phi (x^c, y^c)$ can be inferred from Eq.~\eqref{eq:1.3} as:
   \begin{equation} \label{eq:1.4}
-  	\phi (x^c, y^c) = \arctan \frac{\sum_{n=0}^{N-1} I^c_n(x^c, y^c)\sin(\frac{2\pi n}{N})}{\sum_{n=0}^{N-1} I^c_n(x^c, y^c)\cos(\frac{2\pi n}{N})}.
+  	\phi (x^c, y^c) = \frac{1}{2\pi}\left(\arctan \frac{\sum_{n=0}^{N-1} I^c_n(x^c, y^c)\sin(\frac{2\pi n}{N})}{\sum_{n=0}^{N-1} I^c_n(x^c, y^c)\cos(\frac{2\pi n}{N})} + \pi\right),
   \end{equation}
-
+in Eq.~\eqref{eq:1.4}, the phase value $\phi (x^c, y^c)$ is converted to a range of $[0, 1]$.\\
 The dual-frequency pattern scheme adds a second sinusoidal component to the phase-shifting patterns, as a result, the total number of patterns is still $N$, but each pattern has two sinusoidal components, one is of unit frequency $f_u$, the other is of a high frequency $f_h$ that is used to reduce the impact of noises in the system. If we extend the single-frequency PMP pattern above to the dual-frequency, the intensities of the row pixels from top to bottom would be like an amplitude modulation in which the $f_u$ is frequency of the modulating signal and $f_h$ is the frequency of the carrier wave. According to Liu \textit{et al}., from the projector's point of view, the new dual-frequency pattern is expressed as:
   \begin{equation} \label{eq:1.5}
   	I^p_n(x^p, y^p) = A^p + B^p_1\cos\left(2\pi f_h y^p - \frac{2\pi n}{N}\right) + B^p_2\cos\left(2\pi f_u y^p - \frac{4\pi n}{N}\right),
@@ -128,10 +128,10 @@ Likewise the $B^c_1$, $B^c_2$ and $\phi_h$, $\phi_u$ can be derived from Eq.~\eq
   \end{equation}
 where $m = 1\: or\: 2$ in this case,
  \begin{equation} \label{eq:1.8}
-  	\phi_h (x^c, y^c) = \frac{\arctan \frac{\sum_{n=0}^{N-1} I^c_n(x^c, y^c)\sin(\frac{2\pi n}{N})}{\sum_{n=0}^{N-1} I^c_n(x^c, y^c)\cos(\frac{2\pi n}{N})} + \pi}{2\pi},
+  	\phi_h (x^c, y^c) = \frac{1}{2\pi}\left(\arctan \frac{\sum_{n=0}^{N-1} I^c_n(x^c, y^c)\sin(\frac{2\pi n}{N})}{\sum_{n=0}^{N-1} I^c_n(x^c, y^c)\cos(\frac{2\pi n}{N})} + \pi\right),
   \end{equation}
  \begin{equation} \label{eq:1.9}
-  	\phi_u (x^c, y^c) = \frac{\arctan \frac{\sum_{n=0}^{N-1} I^c_n(x^c, y^c)\sin(\frac{4\pi n}{N})}{\sum_{n=0}^{N-1} I^c_n(x^c, y^c)\cos(\frac{4\pi n}{N})} + \pi}{2\pi}.
+  	\phi_u (x^c, y^c) = \frac{1}{2\pi}\left(\arctan \frac{\sum_{n=0}^{N-1} I^c_n(x^c, y^c)\sin(\frac{4\pi n}{N})}{\sum_{n=0}^{N-1} I^c_n(x^c, y^c)\cos(\frac{4\pi n}{N})} + \pi\right).
   \end{equation}
 Now in Eq.~\eqref{eq:1.8} and \eqref{eq:1.9}, $\phi_h$ and $\phi_u$ are confined within $[0, 1]$; however, the actual range of $\phi_h$ is $[0, f_h]$, the  $\phi_h$ is called the wrapped phase. Unwrapping the $\phi_h$ to $\tilde{\phi}_h \in [0, f_h]$ can lead to a more accurate conversion from phase to depth.  In order to obtain $\tilde{\phi}_h$, the value of $\phi_u$ is used as the following equation shows,
   \begin{equation} \label{eq:1.10}
@@ -166,10 +166,10 @@ During the reconstruction process, the Eq.~\eqref{eq:1.6} to Eq.~\eqref{eq:1.9} 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %replacement equation 10
 %we populate this table based on data collected during calibration...
-Instead, we use a lookup table (LUT) to acquire the unwrapped phase, as Eq.~{eq:1.16} shows,
+Instead, we use a lookup table (LUT) to acquire the unwrapped phase, as Eq.~\eqref{eq:1.16} shows,
 
 \begin{equation} \label{eq:1.16}
-  	\tilde{\phi}_d(x^c, y^c) = LUT[\phi_{p_b}, x^c, y^c] + \phi_{p_a},
+  	\tilde{\phi}_d(x^c, y^c) = LUT[x^c, y^c, \phi_{p_b}] + \phi_{p_a},
   \end{equation}
 where the $\tilde{\phi}_d$ is the unwrapped phase of the pixel $(x^c, y^c)$, $\phi_{p_a}$ is the phase derived from projector A and $\phi_{p_b}$ is the phase derived from projector B.
 The LUT is populated from the data collected during calibration.
@@ -177,7 +177,7 @@ The LUT is populated from the data collected during calibration.
 
 %<<<<<<< HEAD
 The procedure for calibrating our scanner is illustrated in Fig.~\ref{Fig:20} and involves sweeping a rigid, flat checkerboard pattern in correspondence with the $XY$-plane and moving in fixed, small-steps through the scan volume from the nearest plane where $Z = Z_{min}$ to the farthest plane at $Z = Z_{max}$.  The physical moving of the checkerboard pattern is performed using a motorized rail like the Velmex Bi-slide and VXM controller.  These rails can be configured to move with a positional accuracy of 0.076~mm and repeatability of 0.005~mm.  The specific checkerboard pattern that we use the CalTag calibration target introduced by Atcheson \textit{et al}.~\cite{atch10} where, inside each square, is a unique 16-bit codeword identifying and absolute world $(X_w,Y_w)$ coordinates of each squares four corners.
-=======
+%=======
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
