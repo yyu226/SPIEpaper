@@ -303,12 +303,32 @@ Now in order to linearize the projector to avoid the deleterious effects of gamm
 %..JUST SAY SOMETHING ABOUT HOW THE LUT IS PROGRAMMED OVER SERIAL COMMUNICATION WITH MICROCONTOLLER AND THAT IT IS READ DURING BOOT UP OF THE FPGA TO THE INTERNAL LUT INSIDE YOUR BIT FILE..
 This LUT can be hard-coded into the configuration file of the FPGA, but the drawback is that once the lookup table changes, the FPGA configuration file has to be changed. It is quite inconvenient especially when the system needs to be often applied to a different projector, because generating a new FPGA configuration file requires special development tool and takes more time. We devise an approach that the user stores the LUT in a separate EEPROM chip which can be erased and written by any computer via some general serial or USB tools, and the SPI master module in the FPGA reads the EEPROM every time the system  is powered on. With this approach, users can load new LUTs much faster and easier.
 
-The camera synchronization module not only controls the timing of the camera trigger, but also monitors the status of the camera. There are three wires that link the camera and the FPGA, they are $ENABLE$, $TRIGGER$ and the $TRIGGER\_READY$. The $ENABLE$ and $TRIGGER\_READY$ are output signals from the camera, which are programmable from the PC connected to the camera. The $TRIGGER$ is an input signal to the camera that is controlled by the FPGA. Initially, the camera pulls the $ENABLE$ high to tell the FPGA that a new scan is about to start, so the FPGA sends the first SLI pattern to the projector. Meanwhile, the rising edge of the $Vertical\_Sync$ in HDMI module is passed to the $TRIGGER$, it is this rising edge that triggers the camera's first exposure. During the exposure time, the $TRIGGER\_READY$ is pulled low, which indicates the FPGA that no more triggers should be issued for the camera, because the camera is busy processing the current exposure and not ready for the next shot. Likewise, the projector should keep displaying the same SLI pattern. Once an exposure is done, the $TRIGGER\_READY$ immediately goes high,  which tells the FPGA that the camera is ready for another exposure, so the rising edge of the following $Vertical\_Sync$ can be sent to $TRIGGER$ and the next SLI pattern can be sent to the projector.From the PC side, the $TRIGGER\_READY$ is programmed by setting different values to the camera's parameters such as trigger delay and exposure time. Fig.~\ref{Fig:5} briefly illustrates the synchronization between the camera and the projectors.
+The camera synchronization module not only controls the timing of the camera trigger, but also monitors the status of the camera. There are three wires that link the camera and the FPGA, they are $ENABLE$, $TRIGGER$ and the $TRIGGER\_READY$. The $ENABLE$ and $TRIGGER\_READY$ are output signals from the camera, which are programmable from the PC connected to the camera. The $TRIGGER$ is an input signal to the camera that is controlled by the FPGA. Initially, the camera pulls the $ENABLE$ high to tell the FPGA that a new scan is about to start, so the FPGA sends the first SLI pattern to the projector. Meanwhile, the rising edge of the $Vertical\_Sync$ in HDMI module is passed to the $TRIGGER$, it is this rising edge that triggers the camera's first exposure. During the exposure time, the $TRIGGER\_READY$ is pulled low, which indicates the FPGA that no more triggers should be issued for the camera, because the camera is busy processing the current exposure and not ready for the next shot. Likewise, the projector should keep displaying the same SLI pattern. Once an exposure is done, the $TRIGGER\_READY$ immediately goes high,  which tells the FPGA that the camera is ready for another exposure, so the rising edge of the following $Vertical\_Sync$ can be sent to $TRIGGER$ and the next SLI pattern can be sent to the projector.From the PC side, the $TRIGGER\_READY$ is programmed by setting different values to the camera's parameters such as trigger delay and exposure time. Fig.~\ref{Fig:7} briefly illustrates the synchronization between the camera and the projectors.
 %..DESCRIBE THE GPIO CONNECTIONS BETWEEN CAMERA AND PROJECTOR.  IN PARTICULAR, YOU RECEIVE AN ENABLE BIT WHICH IS A PROGRAMMABLE GENERAL PURPOSE BIT FROM THE CAMERA TO THE FPGA THAT THE PC CAN ENABLE WHEN THE HOST PC IS READY TO PERFORM A SCAN.  YOU THEN START PROJECTING THE FIRST PATTERN IN THE SEQUENCE AND WAIT FOR A SECOND BIT, THE FRAME TRIGGER READY BIT FROM THE CAMERA TO THE FPGA, THAT TELLS THE FPGA THAT IT IS READY FOR A TRIGGER.  ON THE SUBSEQUENT VERTICAL SYNC, THE FPGA SENDS OUT A TRIGGER SIGNAL TO THE CAMERA.  THE FPGA THEN STARTS PROJECTING THE NEXT PATTERN IN THE SEQUENCE WHILE WAITING FOR THE FRAME TRIGGER READY TO GO HIGH AGAIN.  WHEN IT DOES, THE FPGA WAITS FOR THE NEXT VERTICAL SYNC TO SEND OUT A TRIGGER, MOVING TO THE NEXT PATTERN IN THE SEQUENCE.  IT IS UP TO THE PC TO SET THE TRIGGER DELAY AND EXPOSURE TIME IN ORDER TO CAPTURE THE ONE FRAME OF VIDEO THAT CORRESPONDS TO THE PROJECTED PATTERNS.  HOWEVER, THE TRIGGER READY SIGNAL CONTROLS THE FRAME RATE OF THE PROJECTOR TO INTEGER DIVISIONS OF 120 HZ, SUCH AS 120, 60, 40, 24, ETC DEPENDING ON THE BUS SPEED OF THE CAMERA.  SO A GIGE CAMERA WITH A MAXIMUM OF 25 FPS WILL RUN AT 24 FPS. 
 \begin{figure}[!t]
   \includegraphics[width=\linewidth]{gpio.png}
   \caption{Timing diagram of the camera's IO signals}
   \label{Fig:5}
+\end{figure}
+
+\begin{figure}
+\centering
+\begin{subfigure}{.5\textwidth}
+  \centering
+  %\includegraphics[width=.5\linewidth]{mojo.jpg}
+  \includegraphics[width=.5\linewidth]{phase2.png}
+  \caption{Exposure time \< frame period}
+  \label{fig:sub3}
+\end{subfigure}%
+\begin{subfigure}{.5\textwidth}
+  \centering
+  %\includegraphics[width=.5\linewidth]{sysdgv2.png}
+   \includegraphics[width=.5\linewidth]{phase.png}
+  \caption{Exposure time \> frame period}
+  \label{fig:sub4}
+\end{subfigure}
+\caption{Timing diagram of the camera's IO signals}
+\label{Fig:7}
 \end{figure}
 
 
