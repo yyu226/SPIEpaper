@@ -27,7 +27,7 @@
 \usepackage{subcaption}
 \usepackage{amsmath}
 
-\title{3D scanning by means of dual-projector structured light illumination} 
+\title{3D Scanning by Means of Dual-Projector \\ Structured Light Illumination} 
 
 %>>>> The author is responsible for formatting the 
 %  author list and their institutions.  Use  \skiplinehalf 
@@ -38,15 +38,14 @@
 
 \author{Ying Yu\supit{a} and Daniel L. Lau\supit{a}
 \skiplinehalf
-\supit{a}University of Kentucky, 101 Main Building, Lexington, KY US; \\
-%\supit{b}University of Kentucky, Address, Lexington, US
+\supit{a}University of Kentucky, 453 F. Paul Anderson Tower, Lexington, KY 40506-0046, USA
 }
 
 %>>>> Further information about the authors, other than their 
 %  institution and addresses, should be included as a footnote, 
 %  which is facilitated by the \authorinfo{} command.
 
-\authorinfo{Further author information: (Send correspondence to Daniel L. Lau)\\Daniel L. Lau: E-mail: dllau@uky.edu, Telephone: 1 859 312 8047\\  Ying Yu: E-mail: yyu226@g.uky.edu} %, Telephone: +33 (0)1 98 76 54 32}
+\authorinfo{Further author information: (Send correspondence to Daniel L. Lau)\\Daniel L. Lau: E-mail: dllau@uky.edu, Telephone: 1 859 257 1787\\  Ying Yu: E-mail: yyu226@g.uky.edu} %, Telephone: +33 (0)1 98 76 54 32}
 %%>>>> when using amstex, you need to use @@ instead of @
  
 
@@ -69,6 +68,8 @@ This paper introduces a dual-projector phase measuring profilometry that adds a 
 \keywords{Structured light illumination, phase measuring profilometry, dual-projector, phase unwrapping}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Introduction}
 \label{sec:intro}  % \label{} allows reference to this section
 As one of the non-contact 3D shape measurement techniques, the structured light illumination (SLI) has been known for its high resolution and high speed~\cite{chen00}. Conventional SLI systems consist of one projector, one camera and one processing unit which is usually a computer. The projector presents patterns that are encoded with some information related to the pixel locations on the object to be measured. If the projection is on a flat surface, the patterns seen should be identical to its original design. However, with the presence of the non-planar object under the projection, what is actually seen from the camera is the distorted patterns on the surface of the object. By comparing and analyzing the distortion in the images taken by the camera, the 3D surface of the object can eventually be reconstructed in a processing unit.
@@ -76,114 +77,93 @@ As one of the non-contact 3D shape measurement techniques, the structured light 
 Within the scope of this fundamental idea and system structure, a lot of research has been done over the past several decades~\cite{geng11}. Different practical implementations have been proposed, from pattern design to system calibration, then to the algorithms that are used to decode the captured patterns. One widely studied area is the one-shot SLI strategy in which only one static pattern is projected onto the object. It employs color pattern~\cite{wust91}, binary grid pattern~\cite{grin92}, gray-scale pattern~\cite{durd98} or even composite pattern~\cite{guan08}. Since there is only one image need to be processed for a scan, the 3D reconstruction can be completed fast. The one-shot strategy is ideal for high speed applications such as real time scanning. But in terms of accuracy, it is not so promising compared to some multi-shot SLI strategy in which the 3D reconstruction is derived by projecting a sequence of patterns and processing multiple images~\cite{blai03}.
 
 According to the method of encoding the information containing the pixel location into the pattern, phase measuring profilometry (PMP)~\cite{srin85} is a subset of SLI techniques that acquires the depth value by translating the phase data from the projected patterns pixelwise. The PMP has some advantageous features including its insensitivity to ambient light and its high accuracy~\cite{guan03, hali89}. Higher frequency patterns have been introduced to PMP systems to reduce the effects of the noise and achieve higher accuracy~\cite{lijl03}. Nonetheless, higher frequency patterns also produces the phase ambiguity which requires the system to execute some extra computation called phase unwrapping~\cite{song18}. Furthermore, adding high frequency patterns increases the projection time as well as the number of images to be processed, which accordingly decreases the overall speed of the system. Liu \textit{et al}. proposed an ingenious dual-frequency pattern strategy which combines a high-frequency pattern and a unit-frequency pattern into one composite pattern~\cite{liuk10}, it improved the accuracy without increasing the scanning time.
-\\
-In this paper, we propose a dual-projector, dual-frequency SLI scheme and its practical implementation. Unlike the scanner presented by Jiang \textit{et al}.~\cite{jian18}, the proposed scanner projects patterns from both projectors simultaneously, which keeps the scan time the same versus a single projector scanner.  We also allow the projectors to be placed in any arbitrary arrangement with 3D point clouds generated from a single fused phase image instead of fusing to independently generated point clouds. Depending on the arrangements of projectors as illustrated in Fig.~\ref{Fig:10}, a dual-projector SLI scanner can be used to minimize occlusions~\cite{linj13} since a scan surface needs to be visible to at least one projector and the camera.  So placing projectors in opposition means a face, for example, can be illuminated from both sides.  Having two unique paths of light from projector to camera also creates new opportunities and challenges for overcoming the issue of multi-path~\cite{otoo16}. 
 
-Placing projectors side-by-side can be used to achieve twice the luminance of a single projector. For instance, suppose the projectors we use are two identical Optoma ML750ST which has around 500 lumens each~\cite{lume70}, by using two projectors, we obtain a total 1000 lumens. Higher light intensity gives rise to the higher signal-to-noise ratios (SNR)~\cite{wangy10}, which makes the system less susceptible to sensor noise, consequently the system becomes more robust and accurate.
+In this paper, we propose a dual-projector, dual-frequency SLI scheme and its practical implementation. Unlike the scanner presented by Jiang \textit{et al}.~\cite{jian18}, the proposed scanner projects patterns from both projectors simultaneously, which keeps the scan time the same versus a single projector scanner.  We also allow the projectors to be placed in any arbitrary arrangement with 3D point clouds generated from a single fused phase image instead of fusing to independently generated point clouds. Depending on the arrangements of projectors as illustrated in Fig.~\ref{Fig:10}, a dual-projector SLI scanner can be used to minimize occlusions~\cite{linj13} since a scan surface needs to be visible to at least one projector and the camera.  So placing projectors in opposition means a face, for example, can be illuminated from both sides.  Having two unique paths of light from projector to camera also creates new opportunities and challenges for overcoming the issue of multi-path~\cite{otoo16}. Placing projectors side-by-side can be used to achieve twice the luminance of a single projector. Higher light intensity gives rise to the higher signal-to-noise ratios (SNR)~\cite{wangy10}, which makes the system less susceptible to sensor noise, consequently the system becomes more robust and accurate.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure}
 \centerline{\includegraphics[width=5.0in]{Figures/Layouts}}
 \vspace{0.1in}
 \caption{Structured light scanners composed of (left) a single projector, (center) opposed dual-projectors for wrap around scanning, and (right) complementary dual-projectors for increased luminance.}
 \label{Fig:10}
 \end{figure} 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 Now in order for dual-projector SLI scanners to become practical, there are two fundamental problems that need to be addressed.  The first is the practical implementation of control logic to perfectly synchronize the projectors to a camera.  For this, we describe an FPGA-based controller using a commodity FPGA board to simultaneously drive two HDMI ports.  The advantage of this system is that it allows us to avoid the practical issues associated with modern GPUs as well as staying low cost.  The second problem that needs to be addressed is how to perform phase unwrapping when the phase images derive from separate projectors arbitrarily arranged.  Using the dual-frequency pattern scheme, we demonstrate using a unit-frequency phase image from one projector to unwrap the high-frequency phase image in the second, opposed projector, using a look-up table-based operation ideally suited for GPUs. This real-time approach is highly flexible and can be used to replace phase unwrapping schemes such as the Chinese remainder technique of Xia \textit{et al}. ~\cite{xiax07}.
 
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Dual-frequency Phase Measuring Profilometry}
-The dual-frequency pattern scheme was initially proposed by Liu \textit{et al}.\cite{liuk10}, it is essentially  an improved derivation of the phase measuring profilometry~\cite{hali89}. In the the traditional PMP a series of phase-shifting sinusoidal fringe patterns are projected onto the object to be measured, the fringe patterns can be either horizontal or vertical, the presence of the object distorts the patterns, then by analyzing the phase values in the deformed pattern images, the 3D depth values can be obtained.
+The dual-frequency pattern scheme was initially proposed by Liu \textit{et al}.\cite{liuk10}, it is essentially  an improved derivation of the phase measuring profilometry~\cite{hali89}. In the the traditional PMP, a series of phase-shifting sinusoidal fringe patterns are projected onto the object to be measured.  The fringe patterns can be either horizontal or vertical such that the presence of the object distorts the patterns where by analyzing the phase values in the deformed pattern images, the 3D depth values can be obtained.
 
 Suppose the phase-shifting patterns are vertical, which indicates that all the pixels in a same row have the identical intensity, and from top to bottom the value of intensities in each row form a sinusoidal function. Therefore, this kind of PMP patterns can be generalized as:
- \begin{equation} \label{eq:1.1}
-  	I^p_n(x^p, y^p) = A^p + B^p\cos\left(2\pi f y^p - \frac{2\pi n}{N}\right),
-  \end{equation}
+\begin{equation} \label{eq:1.1}
+I^p_n(x^p, y^p) = A^p + B^p\cos\left(2\pi f y^p - \frac{2\pi n}{N}\right),
+\end{equation}
 where $I^p_n$ is the intensity of the pixel at the coordinate $(x^p, y^p)$ from the projector's point of view; $A^p$ is background intensity which is considered as a constant; $B^p$ is another constant which represents the fringe contrast compared to the background; $f$ is the frequency of the fringe pattern set which is equal to the number of sinusoidal periods from top to the bottom of the projected patterns; $N$ is the total number of the phase-shifting patterns of the same frequency in a set, $n$ is the current number of the pattern within the range of $[0, N-1]$.
 
 On the camera's side, the image of  the object under the projection of each unique PMP pattern is captured as part of the data to reconstruct the 3D profile of the object. So the projected scene of the object can be described as Eq.~\eqref{eq:1.2} from the camera's point of view, 
- \begin{equation} \label{eq:1.2}
-  	I^c_n(x^c, y^c) =  A^c(x^c, y^c) + B^c(x^c, y^c)\cos\left(\phi(x^c, y^c) - \frac{2\pi n}{N}\right),
-  \end{equation}
-where $I^c_n$ is the intensity of the given pixel $(x^c, y^c)$ in the camera's coordinates system; $A^c(x^c, y^c)$ is the average intensity of the given pixel over the $N$ patterns; $B^c$ can be considered as the average intensity of the PMP pattern seen by the camera, so for any given pixel $(x^c, y^c)$ in a pattern set $[0, N-1]$, $A^c$ and $B^c$ are both constant, furthermore, $B^c(x^c, y^c)$ can be derived from Eq.~\eqref{eq:1.2} as:
-  \begin{equation} \label{eq:1.3}
-  	B^c(x^c, y^c) = \frac{2}{N}\sqrt{\left[\sum_{n=0}^{N-1}I_n^c(x^c, y^c)\sin (\frac{2\pi n}{N})\right]^2 + \left[\sum_{n=0}^{N-1}I_n^c(x^c, y^c)\cos (\frac{2\pi n}{N})\right]^2}.
-  \end{equation}
+\begin{equation} \label{eq:1.2}
+I^c_n(x^c, y^c) =  A^c(x^c, y^c) + B^c(x^c, y^c)\cos\left(\phi(x^c, y^c) - \frac{2\pi n}{N}\right),
+\end{equation}
+where $I^c_n$ is the intensity of the given pixel $(x^c, y^c)$ in the camera's coordinates system; $A^c(x^c, y^c)$ is the average intensity of the given pixel over the $N$ patterns; $B^c$ can be considered as the average intensity of the PMP pattern seen by the camera. So for any given pixel $(x^c, y^c)$ in a pattern set $[0, N-1]$, $A^c$ and $B^c$ are both constant; furthermore, $B^c(x^c, y^c)$ can be derived from Eq.~\eqref{eq:1.2} as:
+\begin{equation} \label{eq:1.3}
+B^c(x^c, y^c) = \frac{2}{N}\sqrt{\left[\sum_{n=0}^{N-1}I_n^c(x^c, y^c)\sin (\frac{2\pi n}{N})\right]^2 + \left[\sum_{n=0}^{N-1}I_n^c(x^c, y^c)\cos (\frac{2\pi n}{N})\right]^2}.
+\end{equation}
 In Eq.~\ref{eq:1.2}, there is another important constant $\phi$ for any given pixel $(x^c, y^c)$ in a given pattern set $[0, N-1]$, it is the phase value $\phi (x^c, y^c)$ of the distorted fringe patterns that is eventually used to calculate the corresponding depth value of the object. The expression of $\phi (x^c, y^c)$ can be inferred from Eq.~\eqref{eq:1.3} as:
   \begin{equation} \label{eq:1.4}
   	\phi (x^c, y^c) = \frac{1}{2\pi}\left(\arctan \frac{\sum_{n=0}^{N-1} I^c_n(x^c, y^c)\sin(\frac{2\pi n}{N})}{\sum_{n=0}^{N-1} I^c_n(x^c, y^c)\cos(\frac{2\pi n}{N})} + \pi\right),
   \end{equation}
-in Eq.~\eqref{eq:1.4}, the phase value $\phi (x^c, y^c)$ is converted to a range of $[0, 1]$.\\
-The dual-frequency pattern scheme adds a second sinusoidal component to the phase-shifting patterns, as a result, the total number of patterns is still $N$, but each pattern has two sinusoidal components, one is of unit frequency $f_u$, the other is of a high frequency $f_h$ that is used to reduce the impact of noises in the system. If we extend the single-frequency PMP pattern above to the dual-frequency, the intensities of the row pixels from top to bottom would be like an amplitude modulation in which the $f_u$ is frequency of the modulating signal and $f_h$ is the frequency of the carrier wave. According to Liu \textit{et al}., from the projector's point of view, the new dual-frequency pattern is expressed as:
-  \begin{equation} \label{eq:1.5}
-  	I^p_n(x^p, y^p) = A^p + B^p_1\cos\left(2\pi f_h y^p - \frac{2\pi n}{N}\right) + B^p_2\cos\left(2\pi f_u y^p - \frac{4\pi n}{N}\right),
-  \end{equation}
-where the $I^p_n$ is the intensity of the pixel $(x^p, y^p)$ in the $n^{th}$ pattern. Similarly the intensity equation of the camera coordinates used for reconstruction becomes:
- \begin{equation} \label{eq:1.6}
-  	I^c_n(x^c, y^c) =  A^c(x^c, y^c) + B^c_1(x^c, y^c)\cos\left(\phi_h(x^c, y^c) - \frac{2\pi n}{N}\right) + B^c_2(x^c, y^c)\cos\left(\phi_u(x^c, y^c) - \frac{4\pi n}{N}\right).
-  \end{equation}
-Likewise the $B^c_1$, $B^c_2$ and $\phi_h$, $\phi_u$ can be derived from Eq.~\eqref{eq:1.3} and Eq. \eqref{eq:1.4} respectively,
-  \begin{equation} \label{eq:1.7}
-  	B^c_m(x^c, y^c) = \frac{2}{N}\sqrt{\left[\sum_{n=0}^{N-1}I_n^c(x^c, y^c)\sin (m\frac{2\pi n}{N})\right]^2 + \left[\sum_{n=0}^{N-1}I_n^c(x^c, y^c)\cos (m\frac{2\pi n}{N})\right]^2},
-  \end{equation}
-where $m = 1\: or\: 2$ in this case,
- \begin{equation} \label{eq:1.8}
-  	\phi_h (x^c, y^c) = \frac{1}{2\pi}\left(\arctan \frac{\sum_{n=0}^{N-1} I^c_n(x^c, y^c)\sin(\frac{2\pi n}{N})}{\sum_{n=0}^{N-1} I^c_n(x^c, y^c)\cos(\frac{2\pi n}{N})} + \pi\right),
-  \end{equation}
- \begin{equation} \label{eq:1.9}
-  	\phi_u (x^c, y^c) = \frac{1}{2\pi}\left(\arctan \frac{\sum_{n=0}^{N-1} I^c_n(x^c, y^c)\sin(\frac{4\pi n}{N})}{\sum_{n=0}^{N-1} I^c_n(x^c, y^c)\cos(\frac{4\pi n}{N})} + \pi\right).
-  \end{equation}
-Now in Eq.~\eqref{eq:1.8} and \eqref{eq:1.9}, $\phi_h$ and $\phi_u$ are confined within $[0, 1]$; however, the actual range of $\phi_h$ is $[0, f_h]$, the  $\phi_h$ is called the wrapped phase. Unwrapping the $\phi_h$ to $\tilde{\phi}_h \in [0, f_h]$ can lead to a more accurate conversion from phase to depth.  In order to obtain $\tilde{\phi}_h$, the value of $\phi_u$ is used as the following equation shows,
-  \begin{equation} \label{eq:1.10}
-	 \tilde{\phi}_h = \phi_h + \lfloor f_h \phi_u - \phi_h + 0.5 \rfloor,
-  \end{equation}
+where the $arctan(\cdot)$ range of $[-\pi,\pi]$ is transformed to the phase value, $\phi (x^c, y^c)$, in the range of $[0, 1]$.
+
+The dual-frequency pattern scheme adds a second sinusoidal component to the phase-shifting patterns. As a result, the total number of patterns is still $N$, but each pattern has two sinusoidal components. One is of unit frequency $f_u$ while the other is of a high frequency $f_h$ that is used to reduce the impact of noises in the system. If we extend the single-frequency PMP pattern above to the dual-frequency, the intensities of the row pixels from top to bottom would be like an amplitude modulation in which the $f_u$ is frequency of the modulating signal and $f_h$ is the frequency of the carrier wave. According to Liu \textit{et al}., from the projector's point of view, the new dual-frequency pattern is expressed as:
+\begin{equation} \label{eq:1.5}
+I^p_n(x^p, y^p) = A^p + B^p_1\cos\left(2\pi f_h y^p - \frac{2\pi n}{N}\right) + B^p_2\cos\left(2\pi f_u y^p - \frac{4\pi n}{N}\right),
+\end{equation}
+where the $I^p_n$ is the intensity of the pixel $(x^p, y^p)$ in the $n^{th}$ pattern. Similarly, the intensity equation of the camera coordinates used for reconstruction becomes:
+\begin{equation} \label{eq:1.6}
+I^c_n(x^c, y^c) =  A^c(x^c, y^c) + B^c_1(x^c, y^c)\cos\left(\phi_h(x^c, y^c) - \frac{2\pi n}{N}\right) + B^c_2(x^c, y^c)\cos\left(\phi_u(x^c, y^c) - \frac{4\pi n}{N}\right).
+\end{equation}
+Likewise, the $B^c_1$, $B^c_2$ and $\phi_h$, $\phi_u$ can be derived from Eq.~\eqref{eq:1.3} and Eq. \eqref{eq:1.4} respectively,
+\begin{equation} \label{eq:1.7}
+B^c_m(x^c, y^c) = \frac{2}{N}\sqrt{\left[\sum_{n=0}^{N-1}I_n^c(x^c, y^c)\sin (m\frac{2\pi n}{N})\right]^2 + \left[\sum_{n=0}^{N-1}I_n^c(x^c, y^c)\cos (m\frac{2\pi n}{N})\right]^2},
+\end{equation}
+where $m = 1$ or $2$ in this case,
+\begin{eqnarray}
+\phi_h (x^c, y^c) & = & \frac{1}{2\pi}\left(\arctan \frac{\sum_{n=0}^{N-1} I^c_n(x^c, y^c)\sin(\frac{2\pi n}{N})}{\sum_{n=0}^{N-1} I^c_n(x^c, y^c)\cos(\frac{2\pi n}{N})} + \pi\right) \mbox{ and} \label{eq:1.8} \\
+\phi_u (x^c, y^c) & = & \frac{1}{2\pi}\left(\arctan \frac{\sum_{n=0}^{N-1} I^c_n(x^c, y^c)\sin(\frac{4\pi n}{N})}{\sum_{n=0}^{N-1} I^c_n(x^c, y^c)\cos(\frac{4\pi n}{N})} + \pi\right). \label{eq:1.9}
+\end{eqnarray}
+where, again, $\phi_h$ and $\phi_u$ are scaled to the range $[0, 1]$. However, the actual range of $\phi_h$ is $[0, f_h]$ -- so $\phi_h$ is called the wrapped phase. Unwrapping the $\phi_h$ to $\tilde{\phi}_h \in [0, f_h]$ can lead to a more accurate conversion from phase to depth.  In order to obtain $\tilde{\phi}_h$, the value of $\phi_u$ is used as the following equation shows,
+\begin{equation} \label{eq:1.10}
+\tilde{\phi}_h(x^c, y^c) = \left( \phi_h(x^c, y^c) + \lfloor f_h \phi_u(x^c, y^c) - \phi_h(x^c, y^c) + 0.5 \rfloor \right)/f_h,
+\end{equation}
 where the $\lfloor \rfloor$ is the symbol of floor function which outputs the greatest integer less than or equal to the value enclosed.
 
-Now that we have unambiguous, unwrapped phase term, $\tilde{\phi}_h$, we can derive the 3D point from our scan according to Liu \textit{et al}. ~\cite{liuk10}:
-\begin{equation}\label{eq:1.11}
-	Z^w = M_z(x^c, y^c) + \frac{N_z(x^c, y^c)}{C(x^c, y^c) \tilde{\phi}_h + 1},
-\end{equation}
-and then
-\begin{equation}\label{eq:1.12}
-	X^w = E_x(x^c, y^c)Z^w + F_x(x^c, y^c),
-\end{equation}
-\begin{equation}\label{eq:1.13}
-	Y^w = E_y(x^c, y^c)Z^w + F_y(x^c, y^c).
-\end{equation}
-where the coefficients $M_z$, $N_z$, $E_x$, $E_y$, $F_x$, $F_y$ and $C$ are determined during calibration of the projector and cameras lenses, assuming pin-hole lens models.
+Now that we have unambiguous, unwrapped phase term, $\tilde{\phi}_h$, we can derive the 3D point from our scan according to Liu \textit{et al}.~\cite{liuk10}:
+\begin{eqnarray}
+Z^w & = & M_z(x^c, y^c) + \frac{N_z(x^c, y^c)}{C(x^c, y^c) \tilde{\phi}_h(x^c, y^c) + 1}, \label{eq:1.11} \\
+X^w & = & E_x(x^c, y^c)Z^w + F_x(x^c, y^c), \label{eq:1.12} \\
+Y^w & = & E_y(x^c, y^c)Z^w + F_y(x^c, y^c). \label{eq:1.13}
+\end{eqnarray}
+where the coefficients $M_z(x^c, y^c)$, $N_z(x^c, y^c)$, $E_x(x^c, y^c)$, $E_y(x^c, y^c)$, $F_x(x^c, y^c)$, $F_y(x^c, y^c)$ and $C(x^c, y^c)$ are determined, for each individual camera pixel, during calibration of the projector and cameras lenses, assuming pin-hole lens models.
 
-
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Dual-Projector Phase Measuring Profilometry}
-In this paper, we apply the dual-frequency PMP to a dual-projector system in which the SLI patterns in Eq.~\eqref{eq:1.5} are jointly generated by two separate projectors A and B. The projector A produces the high frequency component while the projector B only produces the unit frequency component. Thus their intensity equations can be expressed respectively as:
-   \begin{equation} \label{eq:1.14}
-  	I^{p_a}_n(x^{p_a}, y^{p_a}) = A^{p_a} + B^{p_a}_1\cos\left(2\pi f_h y^{p_a} - \frac{2\pi n}{N}\right), and 
-  \end{equation}
-   \begin{equation} \label{eq:1.15}
-  	I^{p_b}_n(x^{p_b}, y^{p_b}) = A^{p_b} + B^{p_b}_2\cos\left(2\pi f_u y^{p_b} - \frac{4\pi n}{N}\right).
-  \end{equation}
-During the reconstruction process, the Eq.~\eqref{eq:1.6} to Eq.~\eqref{eq:1.9} remain the same as what they are in the single-projector system, because the dual-projector system does not make it much different from the camera's point of view. However, the Eq.~\eqref{eq:1.10} is not applicable for the dual-projector system anymore. 
-
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%replacement equation 10
-%we populate this table based on data collected during calibration...
-Instead, we use a lookup table (LUT) to acquire the unwrapped phase, as Eq.~\eqref{eq:1.16} shows,
-
+In this paper, we apply the dual-frequency PMP to a dual-projector system in which the SLI patterns in Eq.~\eqref{eq:1.5} are jointly generated by two separate projectors A and B. The projector A produces the high frequency component while the projector B only produces the unit frequency component. Thus, their intensity equations can be expressed as:
+\begin{eqnarray}
+I^{p_a}_n(x^{p_a}, y^{p_a}) & = & A^{p_a} + B^{p_a}_1\cos\left(2\pi f_h y^{p_a} - \frac{2\pi n}{N}\right),\mbox{ and}\label{eq:1.14}\\
+I^{p_b}_n(x^{p_b}, y^{p_b}) & = & A^{p_b} + B^{p_b}_2\cos\left(2\pi f_u y^{p_b} - \frac{4\pi n}{N}\right),\label{eq:1.15}
+\end{eqnarray}
+respectively. During the reconstruction process, Eqn.~\eqref{eq:1.6} and \eqref{eq:1.9} remain the same; however, Eqn.~\eqref{eq:1.10} is not applicable for the dual-projector system since the two phases do not have a deterministic relationship.  Instead, we use a lookup table (LUT) to acquire the unwrapped phase according to:
 \begin{equation} \label{eq:1.16}
-  	\tilde{\phi}_d(x^c, y^c) = LUT[x^c, y^c, \phi_{p_b}] + \phi_{p_a},
-  \end{equation}
-where the $\tilde{\phi}_d$ is the unwrapped phase of the pixel $(x^c, y^c)$, $\phi_{p_a}$ is the phase derived from projector A and $\phi_{p_b}$ is the phase derived from projector B.
-The LUT is populated from the data collected during calibration.
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\tilde{\phi}_h(x^c, y^c) = \left( \phi_h(x^c, y^c) + \lfloor LUT[x^c, y^c, \phi_u(x^c, y^c)] - \phi_h(x^c, y^c) + 0.5 \rfloor \right)/f_h,
+\end{equation}
+where the look-up table, $LUT[x^c, y^c, \phi_u(x^c, y^c)]$, represents a 3D matrix that is populated from the data collected during calibration.
 
-%<<<<<<< HEAD
 The procedure for calibrating our scanner is illustrated in Fig.~\ref{Fig:20} and involves sweeping a rigid, flat checkerboard pattern in correspondence with the $XY$-plane and moving in fixed, small-steps through the scan volume from the nearest plane where $Z = Z_{min}$ to the farthest plane at $Z = Z_{max}$.  The physical moving of the checkerboard pattern is performed using a motorized rail like the Velmex Bi-slide and VXM controller.  These rails can be configured to move with a positional accuracy of 0.076~mm and repeatability of 0.005~mm.  The specific checkerboard pattern that we use the CalTag calibration target introduced by Atcheson \textit{et al}.~\cite{atch10} where, inside each square, is a unique 16-bit codeword identifying and absolute world $(X_w,Y_w)$ coordinates of each squares four corners.
-%=======
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Calibration}
-The procedure for calibrating our scanner is illustrated in Fig.~\ref{Fig:20} and involves sweeping a rigid, flat checkerboard pattern, in correspondence with the $XY$-plane, in fixed, small-steps through the scan volume from the nearest plane at $Z = Z_{min}$ to the farthest plane at $Z = Z_{max}$.  The physical moving of the checkerboard pattern is performed using a motorized rail like the Velmex Bi-slide and VXM controller.  These rails can be configured to move with a positional accuracy of 0.076~mm and repeatability of 0.005~mm.  The specific checkerboard pattern that we use is the CalTag calibration target introduced by Atcheson et al~\cite{atch10} where, inside each square, is a unique 16-bit codeword identifying and absolute world coordinates,  $(X_w,Y_w)$, of each square's four corners.
-%>>>>>>> 716b5f75bdda6aa6bf4630801fbe0c1071de81a3
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure}[!t]
@@ -196,15 +176,12 @@ The procedure for calibrating our scanner is illustrated in Fig.~\ref{Fig:20} an
 
 As stated above, the calibration procedure involves iteratively moving the CalTag target along the Z-axis from $Z_{min}$ to $Z_{max}$ such that, at each step, we perform a structured light scan with each camera pixel defined according to:
 \begin{equation}
-%<<<<<<< HEAD
 I_c[x^c, y^c, k] = [X_w[x^c, y^c, k], Y_w[x^c, y^c, k], Z_w[x^c, y^c, k], P_a[x^c, y^c, k], P_b[x^c, y^c, k]]
 \label{calEqn}
 \end{equation}
 where $x^c$ and $y^c$ are the pixel’s column and row coordinates; $k$ is the step index for the current scan; $X_w[x^c, y^c, k]$ and $Y_w[x^c, y^c, k]$ are the CalTag grid coordinate at the intersection of the CalTag target’s surface and the camera pixel’s line-of-sight; $Z_w[x^c, y^c, k]$ is the Z-position of the rail; and $P[x^c, y^c, k]$ is the phase value of the projected PMP sequence in the line-of-sight of the camera pixel.  Once complete, we then have a 3D texture composed of a stack of 4-color digital images that are the height and width of our camera and $K$ layers deep with $P[x^c, y^c, k]$ ranging from $P_{min}[x^c, y^c]$ to $P_{max}[x^c, y^c]$ as $Z_w[x^c, y^c, k]$ ranges from $Z_{min}[x^c, y^c]$ to $Z_{max}[x^c, y^c]$.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%NOW LET"S LOOK AT A PLOT OF PA VS PB IN THE DUAL PROJECTOR SYSTEM AND COMPARE IT WITH A PLOT OF PLOW VS PHIGH IN THE SINGLE PROJECTOR SYSTEM
-%IN LIGHT OF THIS PLOT, WE POPULATE THE LUT FROM EQN. (NEW 10) SUCH THAT LUT[PLOW] = FUNCTION EQUAL TO PHIGH
 Fig.~\ref{Fig:3} illustrates the relationship between the $\phi_f$ and $\phi_h$ for the single-projector PMP system (left) and the dual-projector PMP system (right) respectively.
 \begin{figure}[!t]
   \includegraphics[width=\linewidth]{phase.png}
@@ -332,43 +309,8 @@ The camera synchronization module not only controls the timing of the camera tri
 \end{figure}
 
 
-%=======
-%I_c[r,c,k] = [X_w[r,c,k], Y_w[r,c,k], Z_w[k], P[r,c,k]]
-%\label{calEqn}
-%\end{equation}
-%where $r$ and $c$ are the pixel's row and column coordinate; $k$ is the step index for the current scan; $X_w[r,c,k]$ and $Y_w[r,c,k]$ are the CalTag grid coordinate at the intersection of the CalTag target's surface and the camera pixel's line-of-sight; $Z_w[k]$ is the Z-position of the rail; and $P[r,c,k]$ is the phase value of the projected PMP sequence in the line-of-sight of the camera pixel.  Once complete, we then have a 3D texture composed of a stack of 4-color digital images that are the height and width of our camera and $K$ layers deep with $P[r,c,k]$ ranging from $P_{min}[r,c]$ to $P_{max}[r,c]$ as $Z_w[k]$ ranges from $Z_{min}$ to $Z_{max}$.
-%
-%In order to parameterize the relationships between channels, let's define $\vec{x}_{r,c}$, $\vec{y}_{r,c}$, and $\vec{z}_{r,c}$ as the $K$-dimensional vector composed of $X_w[r,c,k]$, $Y_w[r,c,k]$, and $Z_w[k]$, and let's define $\vec{p}_{r,c}$ as the normalized phase coordinates derived from $P[r,c,k]$ according to:
-%\begin{equation}
-%\vec{p}_{r,c}[k] = \frac{P[r,c,k] - P_{min}[r,c]}{P_{max}[r,c] - P_{min}[r,c]}.
-%\end{equation}
-%From these vectors, we can derive a plot of any pixel channel versus any other channel.  For example, we can plot $\vec{x}_{r,c}$ versus $\vec{z}_{r,c}$ or, more importantly, $\vec{z}_{r,c}$ versus $\vec{p}_{r,c}$.  Assuming the pin-hole lens model for both the camera and the projector, we know from Liu~\textit{et al} that the relationship between $\vec{x}_{r,c}$ and $\vec{z}_{r,c}$ as well as $\vec{y}_{r,c}$ and $\vec{z}_{r,c}$ are given by the straight line relationships:
-%\begin{eqnarray}
-%\vec{x}_{r,c} & = & A_{r,c} \vec{z}_{r,c} + B_{r,c}, \mbox{ and} \\
-%\vec{y}_{r,c} & = & C_{r,c} \vec{z}_{r,c} + D_{r,c},
-%\label{pinHoleEqnXY}
-%\end{eqnarray}
-%where $A_{r,c}$, $B_{r,c}$, $C_{r,c}$, and $D_{r,c}$ are scalar constants representing the slope and intercepts found by best-fitting straight lines between recorded points; furthermore, the relationship between $\vec{z}_{r,c}$ versus $\vec{p}_{r,c}$ is given by the equation:
-%\begin{equation}
-%\tilde{z}[r,c] = \frac{E_{r,c} \vec{p}_{r,c} + F_{r,c}}{G_{r,c} \vec{p}_{r,c} + H_{r,c}},
-%\label{pinHoleEqnPZ}
-%\end{equation}
-%where $E_{r,c}$, $F_{r,c}$, $G_{r,c}$, and $H_{r,c}$ are scalar constants found either through singular value decomposition~\cite{??} or the pseudo-inverse~\cite{??}. In situations where the lens of either the projector or the camera are not accurately modeled by the pin-hole lens model, we can replace eqn.~\eqref{pinHoleEqnPZ} with a more flexible fourth-order polynomial model defined as:
-%\begin{equation}
-%\tilde{z}[r,c] = E_{r,c} \vec{p}_{r,c}^{~4} + F_{r,c} \vec{p}_{r,c}^{~3} + G_{r,c} \vec{p}_{r,c}^{~2} + H_{r,c} \vec{p}_{r,c} + I_{r,c},
-%\label{plyHoleEqn}
-%\end{equation}
-%where $E_{r,c}$, $F_{r,c}$, $G_{r,c}$, $H_{r,c}$, and $I_{r,c}$ are found using a least-squares polynomial fitting algorithm.  Equation~\eqref{pinHoleEqnXY} need not change since the line-of-sight of any camera pixel is a straight line regardless of any lens distortion.
-%>>>>>>> 716b5f75bdda6aa6bf4630801fbe0c1071de81a3
-%
-%Now as an alternative to parameterizing our calibration data by eqns.~\eqref{pinHoleEqnXY}-\eqref{plyHoleEqn}, a wholly different approach is to build a 3D look-up-table indexed by the normalized phase values acquired during a scan. This is achieved by generating a set of plots between the world coordinates in $\vec{x}_{r,c}$, $\vec{y}_{r,c}$, and $\vec{z}_{r,c}$ versus $\vec{p}_{r,c}$ and then resampling them along equal increments of the $\vec{p}_{r,c}$ axis, keeping in mind that $\vec{x}_{r,c}$, $\vec{y}_{r,c}$, $\vec{z}_{r,c}$, and $\vec{p}_{r,c}$ are currently recorded along equal increments along $\vec{z}_{r,c}$.  Keeping in mind that this interpolation can be with greater or fewer samples, $L$, than the original collected data with $K$ layers.  Doing so, we define our look-up-table as a 3D texture according to:
-%\begin{equation}
-%LUT[r,c,l] = [X_w[r,c,l], Y_w[r,c,l], Z_w[r,c,l]]
-%\end{equation}
-%where $r$ and $c$ are the pixel's row and column coordinate and $l$ is the resampled step index replacing $k$. The benefits of using the look-up-table over the parameterized model is that it avoids the error associated with inappropriate parameterization of lens distortion as well as detrimental impact of phase distortions such as gamma~\cite{??} as well as dithering noise caused by using projector defocus to blur the pixels of a binary DMD pattern~\cite{??}. The only condition is that the phase image must be monotonic. With regards to real-time performance, the 3D look-up-table is easily implemented on an OpenGL shader using the {\em texture} function~\cite{??}.
-
-
-
+\section{Conclusions}
+In this paper, we have introduced a generalized frame work for building multi-projector structured light scanners. Specifically, we have developing an FPGA controller to drive two synchronized projectors with camera handshaking such that the projected pattern sequences run at an adjustable frame rate regulated by the camera's acquisition speed.  In addition to this hardware, we have also introduced a pattern scheme that allows multiple patterns to be superimposed on each other and separated by the processing of the captured images inside the CPU.  This disambiguation allows the projectors to be assembled in any arbitrary arrangement.  And using our described calibration technique, we can fuse the phase images from multiple projectors to acquire a cohesively fused phase image from which to derive depth. Future research will focus on integrating the FPGA engine inside the FPGA resources of an existing machine vision camera to create a camera that converts any HDMI projector into an instant structured light scanner.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%% References %%%%%
