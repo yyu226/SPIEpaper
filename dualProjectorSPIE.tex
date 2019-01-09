@@ -117,7 +117,7 @@ In Eq.~\ref{eq:1.2}, there is another important constant $\phi$ for any given pi
   \end{equation}
 where the $arctan(\cdot)$ range of $[-\pi,\pi]$ is transformed to the phase value, $\phi (x^c, y^c)$, in the range of $[0, 1]$.
 
-The dual-frequency pattern scheme adds a second sinusoidal component to the phase-shifting patterns. As a result, the total number of patterns is still $N$, but each pattern has two sinusoidal components. One is of unit frequency $f_u$ while the other is of a high frequency $f_h$ that is used to reduce the impact of noises in the system. If we extend the single-frequency PMP pattern above to the dual-frequency, the intensities of the row pixels from top to bottom would be like an amplitude modulation in which the $f_u$ is frequency of the modulating signal and $f_h$ is the frequency of the carrier wave. According to Liu \textit{et al}., from the projector's point of view, the new dual-frequency pattern is expressed as:
+The dual-frequency pattern scheme adds a second sinusoidal component to the phase-shifting patterns. As a result, the total number of patterns is still $N$, but each pattern has two sinusoidal components. One is of unit frequency, $f_u = 1$, while the other is of a high frequency, $f_h$, that is used to reduce the impact of noises in the system. According to Liu \textit{et al}., from the projector's point of view, the new dual-frequency pattern is expressed as:
 \begin{equation} \label{eq:1.5}
 I^p_n(x^p, y^p) = A^p + B^p_1\cos\left(2\pi f_h y^p - \frac{2\pi n}{N}\right) + B^p_2\cos\left(2\pi f_u y^p - \frac{4\pi n}{N}\right),
 \end{equation}
@@ -293,14 +293,14 @@ The camera synchronization module not only controls the timing of the camera tri
 \begin{subfigure}{.5\textwidth}
   \centering
   %\includegraphics[width=.5\linewidth]{mojo.jpg}
-  \includegraphics[width=7cm]{phase2.png}
+  \includegraphics[width=8cm]{phase2.png}
   \caption{Exposure time $<$ frame period}
   \label{fig:sub3}
 \end{subfigure}%
 \begin{subfigure}{.5\textwidth}
   \centering
   %\includegraphics[width=.5\linewidth]{sysdgv2.png}
-   \includegraphics[width=7cm]{gpio.png}
+   \includegraphics[width=8cm]{gpio.png}
   \caption{Exposure time $>$ frame period}
   \label{fig:sub4}
 \end{subfigure}
