@@ -142,9 +142,9 @@ where the $\lfloor \rfloor$ is the symbol of floor function which outputs the gr
 
 Now that we have unambiguous, unwrapped phase term, $\tilde{\phi}_h$, we can derive the 3D point from our scan according to Liu \textit{et al}.~\cite{liuk10}:
 \begin{eqnarray}
-Z^w & = & M_z(x^c, y^c) + \frac{N_z(x^c, y^c)}{C(x^c, y^c) \tilde{\phi}_h(x^c, y^c) + 1}, \label{eq:1.11} \\
-X^w & = & E_x(x^c, y^c)Z^w + F_x(x^c, y^c), \label{eq:1.12} \\
-Y^w & = & E_y(x^c, y^c)Z^w + F_y(x^c, y^c). \label{eq:1.13}
+Z^w(x^c, y^c) & = & M_z(x^c, y^c) + \frac{N_z(x^c, y^c)}{C(x^c, y^c) \tilde{\phi}_h(x^c, y^c) + 1}, \label{eq:1.11} \\
+X^w(x^c, y^c) & = & E_x(x^c, y^c)Z^w(x^c, y^c) + F_x(x^c, y^c), \label{eq:1.12} \\
+Y^w(x^c, y^c) & = & E_y(x^c, y^c)Z^w(x^c, y^c) + F_y(x^c, y^c). \label{eq:1.13}
 \end{eqnarray}
 where the coefficients $M_z(x^c, y^c)$, $N_z(x^c, y^c)$, $E_x(x^c, y^c)$, $E_y(x^c, y^c)$, $F_x(x^c, y^c)$, $F_y(x^c, y^c)$ and $C(x^c, y^c)$ are determined, for each individual camera pixel, during calibration of the projector and cameras lenses, assuming pin-hole lens models.
 
@@ -165,30 +165,31 @@ where the look-up table, $LUT[x^c, y^c, \phi_u(x^c, y^c)]$, represents a 3D matr
 
 The procedure for calibrating our scanner is illustrated in Fig.~\ref{Fig:20} and involves sweeping a rigid, flat checkerboard pattern in correspondence with the $XY$-plane and moving in fixed, small-steps through the scan volume from the nearest plane where $Z = Z_{min}$ to the farthest plane at $Z = Z_{max}$.  The physical moving of the checkerboard pattern is performed using a motorized rail like the Velmex Bi-slide and VXM controller.  These rails can be configured to move with a positional accuracy of 0.076~mm and repeatability of 0.005~mm.  The specific checkerboard pattern that we use the CalTag calibration target introduced by Atcheson \textit{et al}.~\cite{atch10} where, inside each square, is a unique 16-bit codeword identifying and absolute world $(X_w,Y_w)$ coordinates of each squares four corners.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure}[!t]
 \centerline{\includegraphics[width=6.6in]{Figures/SLICalibrationDual}}
 \vspace{0.1in}
 \caption{Illustration showing dual-projector scanner calibration.}
 \label{Fig:20}
 \end{figure} 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 As stated above, the calibration procedure involves iteratively moving the CalTag target along the Z-axis from $Z_{min}$ to $Z_{max}$ such that, at each step, we perform a structured light scan with each camera pixel defined according to:
 \begin{equation}
 I_c[x^c, y^c, k] = [X_w[x^c, y^c, k], Y_w[x^c, y^c, k], Z_w[x^c, y^c, k], P_h[x^c, y^c, k], P_u[x^c, y^c, k]]
 \label{calEqn}
 \end{equation}
-where $x^c$ and $y^c$ are the pixel’s column and row coordinates; $k$ is the step index for the current scan; $X_w[x^c, y^c, k]$ and $Y_w[x^c, y^c, k]$ are the CalTag grid coordinate at the intersection of the CalTag target’s surface and the camera pixel’s line-of-sight; $Z_w[x^c, y^c, k]$ is the Z-position of the rail; and $P[x^c, y^c, k]$ is the phase value of the projected PMP sequence in the line-of-sight of the camera pixel.  Once complete, we then have a 3D texture composed of a stack of 4-color digital images that are the height and width of our camera and $K$ layers deep with $P[x^c, y^c, k]$ ranging from $P_{min}[x^c, y^c]$ to $P_{max}[x^c, y^c]$ as $Z_w[x^c, y^c, k]$ ranges from $Z_{min}[x^c, y^c]$ to $Z_{max}[x^c, y^c]$.
+where $x^c$ and $y^c$ are the pixel's column and row coordinates; $k$ is the step index for the current scan; $X_w[x^c, y^c, k]$ and $Y_w[x^c, y^c, k]$ are the CalTag grid coordinate at the intersection of the CalTag target's surface and the camera pixel's line-of-sight; $Z_w[x^c, y^c, k]$ is the Z-position of the rail; and $P_u[x^c, y^c, k]$ and $P_h[x^c, y^c, k]$ are the dual phase values of the projected PMP sequences in the line-of-sight of the camera pixel.  In the case of $P_h[x^c, y^c, k]$, we apply phase unwrapping to the captured images so that $P_h[x^c, y^c, k]$ is the unwrapped phase value in the range 0 to $f_h$.  In this way, the floor of $P_h[x^c, y^c, k]$ corresponds to the unwrapping index while the fractional part corresponds to the wrapped phase value. Once complete, we then have a 3D texture composed of a stack of 5-color digital images that are the height and width of our camera and $K$ layers deep with the unwrapped $P_h[x^c, y^c, k]$ ranging from $P_{min}[x^c, y^c]$ to $P_{max}[x^c, y^c]$ as $Z_w[x^c, y^c, k]$ ranges from $Z_{min}[x^c, y^c]$ to $Z_{max}[x^c, y^c]$.
 
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-Fig.~\ref{Fig:3} illustrates the relationship between the $\phi_f$ and $\phi_h$ for the single-projector PMP system (left) and the dual-projector PMP system (right) respectively.
+Now in order to complete calibration, we...From these vectors, we can plot the relationship between any two parameters.  For instance, Fig.~\ref{Fig:3} plots the relationship between $P_u[x^c, y^c, k]$ and the unwrapped or fractional component of $P_h[x^c, y^c, k]$.  It is this relationship that we store in $LUT[x^c, y^c, \phi_u(x^c, y^c)]$ of eqn.~\eqref{eq:1.16}.  Specifically, Fig.~\ref{Fig:3}~(left) illustrates the phase relationships when the two phase terms derive from a single projector while Fig.~\ref{Fig:3}~(right) shows the arbitrary relationship found in our dual-projector system.  It should be noted that our look-up table approach can be applied to both. In fact, applying our approach to a traditional structured light scanner proved a reliable way to debug the source code.
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure}[!t]
   \includegraphics[width=\linewidth]{phase.png}
   \caption{$\phi_f$ vs. $\phi_u$ in single-projector system (left) and dual-projector system (right)}
   \label{Fig:3}
 \end{figure}
-%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 
 
 
