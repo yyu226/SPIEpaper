@@ -36,7 +36,7 @@
 %  can be indicated with a superscript in italics, 
 %  which is easily obtained with \supit{}.
 
-\author{Ying Yu\supit{a} and Daniel L. Lau\supit{a} and Matthew P. Ruffner\supit{a}
+\author{Ying Yu\supit{a}, Matthew P. Ruffner\supit{a}, and Daniel L. Lau\supit{a}
 \skiplinehalf
 \supit{a}University of Kentucky, 453 F. Paul Anderson Tower, Lexington, KY 40506-0046, USA
 }
@@ -60,7 +60,8 @@
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%% 
 \begin{abstract}
-This paper introduces a dual-projector phase measuring profilometry that adds a second projector in a traditional structured light illumination system to improve the overall quality of the 3D scanning. With this method, two projectors are synchronized to a single camera, but each one projects structured light patterns of its unique frequency. The system performance benefits from a wider projection angle and a doubled light intensity. In particular, a detailed system implementation in hardware level is described. Moreover, the major difference between the phase unwrapping of dual-projector system and the single-projector system is discussed, and a LUT-based phase unwrapping scheme for this dual-projector phase measuring profilometry system is proposed. 
+This paper introduces a dual-projector phase measuring profiler that adds a second projector to a traditional structured light illumination system to improve the overall quality of 3D scanning. With this method, two projectors are synchronized to a single camera, but each one projects structured light patterns of a unique frequency. The system performance benefits from a wider projection angle and doubled light intensity. In particular, a detailed system implementation in hardware is described. Moreover, the major difference between the phase unwrapping of our dual-projector system versus a single-projector system is discussed with a LUT-based phase unwrapping scheme proposed. 
+
 \end{abstract}
 
 %>>>> Include a list of keywords after the abstract 
@@ -97,7 +98,7 @@ Now, in order for dual-projector SLI scanners to become practical, there are two
 \section{Dual-frequency Phase Measuring Profilometry}
 The dual-frequency pattern scheme was initially proposed by Liu \textit{et al}.\cite{liuk10}, and is essentially an improved derivation of phase measuring profilometry~\cite{hali89}. In the the traditional PMP, a series of phase-shifting sinusoidal fringe patterns are projected onto the object to be measured.  The fringe patterns can be either horizontal or vertical such that the presence of the object distorts the patterns where by analyzing the phase values in the deformed pattern images, the 3D depth values can be obtained.
 
-Suppose the phase-shifting patterns are vertical, which indicates that all the pixels in a same row have the identical intensity, and from top to bottom the value of intensities in each row form a sinusoidal function. Therefore, this kind of PMP patterns can be generalized as:
+Suppose the phase-shifting patterns are horizontal, which indicates that all the pixels in a same row have the identical intensity, and from top to bottom the value of intensities in each row form a sinusoidal function. Therefore, this kind of PMP patterns can be generalized as:
 \begin{equation} \label{eq:1.1}
 I^p_n(x^p, y^p) = A^p + B^p\cos\left(2\pi f y^p - \frac{2\pi n}{N}\right),
 \end{equation}
@@ -142,11 +143,11 @@ where the $\lfloor \rfloor$ is the symbol of floor function which outputs the gr
 
 Now that we have unambiguous, unwrapped phase term, $\tilde{\phi}_h$, we can derive the 3D point from our scan according to Liu \textit{et al}.~\cite{liuk10}:
 \begin{eqnarray}
-Z^w(x^c, y^c) & = & M_z(x^c, y^c) + \frac{N_z(x^c, y^c)}{C(x^c, y^c) \tilde{\phi}_h(x^c, y^c) + 1}, \label{eq:1.11} \\
-X^w(x^c, y^c) & = & E_x(x^c, y^c)Z^w(x^c, y^c) + F_x(x^c, y^c), \label{eq:1.12} \\
-Y^w(x^c, y^c) & = & E_y(x^c, y^c)Z^w(x^c, y^c) + F_y(x^c, y^c). \label{eq:1.13}
+X_w(x^c, y^c) & = & a(x^c, y^c) Z_w(x^c, y^c) + b(x^c, y^c), \label{xwEqn} \\
+Y_w(x^c, y^c) & = & c(x^c, y^c) Z_w(x^c, y^c) + d(x^c, y^c), \mbox{ and} \label{ywEqn} \\
+Z_w(x^c, y^c) & = & (e(x^c, y^c) \tilde{\phi}_h(x^c, y^c) + f(x^c, y^c))/(g(x^c, y^c) \tilde{\phi}_h(x^c, y^c) + 1), \label{zwEqn} 
 \end{eqnarray}
-where the coefficients $M_z(x^c, y^c)$, $N_z(x^c, y^c)$, $E_x(x^c, y^c)$, $E_y(x^c, y^c)$, $F_x(x^c, y^c)$, $F_y(x^c, y^c)$ and $C(x^c, y^c)$ are determined, for each individual camera pixel, during calibration of the projector and cameras lenses, assuming pin-hole lens models.
+where the coefficients $a(x^c, y^c)$, $b(x^c, y^c)$, ..., and $g(x^c, y^c)$ are determined, for each individual camera pixel, during calibration of the projector and cameras lenses, assuming pin-hole lens models.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -180,15 +181,27 @@ I_c[x^c, y^c, k] = [X_w[x^c, y^c, k], Y_w[x^c, y^c, k], Z_w[x^c, y^c, k], P_h[x^
 \label{calEqn}
 \end{equation}
 where $x^c$ and $y^c$ are the pixel's column and row coordinates; $k$ is the step index for the current scan; $X_w[x^c, y^c, k]$ and $Y_w[x^c, y^c, k]$ are the CalTag grid coordinate at the intersection of the CalTag target's surface and the camera pixel's line-of-sight; $Z_w[x^c, y^c, k]$ is the Z-position of the rail; and $P_u[x^c, y^c, k]$ and $P_h[x^c, y^c, k]$ are the dual phase values of the projected PMP sequences in the line-of-sight of the camera pixel.  In the case of $P_h[x^c, y^c, k]$, we apply phase unwrapping to the captured images so that $P_h[x^c, y^c, k]$ is the unwrapped phase value in the range 0 to $f_h$.  In this way, the floor of $P_h[x^c, y^c, k]$ corresponds to the unwrapping index while the fractional part corresponds to the wrapped phase value. Once complete, we then have a 3D texture composed of a stack of 5-color digital images that are the height and width of our camera and $K$ layers deep with the unwrapped $P_h[x^c, y^c, k]$ ranging from $P_{min}[x^c, y^c]$ to $P_{max}[x^c, y^c]$ as $Z_w[x^c, y^c, k]$ ranges from $Z_{min}[x^c, y^c]$ to $Z_{max}[x^c, y^c]$.
-<<<<<<< HEAD
 
-Now in order to complete calibration, we...From these vectors, we can plot the relationship between any two parameters.  For instance, Fig.~\ref{Fig:3} plots the relationship between $P_u[x^c, y^c, k]$ and the unwrapped or fractional component of $P_h[x^c, y^c, k]$.  It is this relationship that we store in $LUT[x^c, y^c, \phi_u(x^c, y^c)]$ of eqn.~\eqref{eq:1.16}.  Specifically, Fig.~\ref{Fig:3}~(left) illustrates the phase relationships when the two phase terms derive from a single projector while Fig.~\ref{Fig:3}~(right) shows the arbitrary relationship found in our dual-projector system.  It should be noted that our look-up table approach can be applied to both. In fact, applying our approach to a traditional structured light scanner proved a reliable way to debug the source code.
+In order to parameterize the relationships between channels, let's define $\vec{x}_{x^c, y^c}$, $\vec{y}_{x^c, y^c}$, and $\vec{z}_{x^c, y^c}$ as the $K$-dimensional vectors composed of $X_w[x^c, y^c, k]$, $Y_w[x^c, y^c, k]$, and $Z_w[x^c, y^c, k]$, and let's define $\vec{p}_{x^c, y^c}$ as the normalized phase vector derived from unwrapped phase, $P_h[x^c, y^c, k]$, according to:
+\begin{equation}
+\vec{p}_{x^c, y^c}[k] = \frac{P_h[x^c, y^c, k] - P_{min}[x^c, y^c]}{P_{max}[x^c, y^c] - P_{min}[x^c, y^c]}.
+\end{equation}
+From these vectors, we can derive a plot of any pixel channel versus any other channel.  For instance, Fig.~\ref{Fig:3} plots the relationship between $P_u[x^c, y^c, k]$ and the unwrapped or fractional component of $P_h[x^c, y^c, k]$.  It is this relationship that we store in $LUT[x^c, y^c, \phi_u(x^c, y^c)]$ of eqn.~\eqref{eq:1.16}.  Specifically, Fig.~\ref{Fig:3}~(left) illustrates the phase relationships when the two phase terms derive from a single projector while Fig.~\ref{Fig:3}~(right) shows the arbitrary relationship found in our dual-projector system.  It should be noted that our look-up table approach can be applied to both. In fact, applying our approach to a traditional structured light scanner proved a reliable way to debug the source code.
 
-=======
+Now assuming the pin-hole lens model for both the camera and the projector, we know from Liu~\textit{et al} that the relationship between $\vec{x}_{x^c, y^c}$ and $\vec{z}_{x^c, y^c}$ as well as $\vec{y}_{x^c, y^c}$ and $\vec{z}_{x^c, y^c}$ are given by the straight line relationships:
+\begin{eqnarray}
+\vec{x}_{x^c, y^c} & = & a_{x^c, y^c} \vec{z}_{x^c, y^c} + b_{x^c, y^c}, \mbox{ and} \\
+\vec{y}_{x^c, y^c} & = & c_{x^c, y^c} \vec{z}_{x^c, y^c} + d_{x^c, y^c},
+\label{pinHoleEqnXY}
+\end{eqnarray}
+where $a_{x^c, y^c}$, $b_{x^c, y^c}$, $c_{x^c, y^c}$, and $d_{x^c, y^c}$ are scalar constants representing the slope and intercepts found by best-fitting straight lines between recorded points; furthermore, the relationship between $\vec{z}_{x^c, y^c}$ versus $\vec{p}_{x^c, y^c}$ is given by the equation:
+\begin{equation}
+\tilde{z}_{x^c, y^c} = \frac{e_{x^c, y^c} \vec{p}_{x^c, y^c} + f_{x^c, y^c}}{g_{x^c, y^c} \vec{p}_{x^c, y^c} + 1},
+\label{pinHoleEqnPZ}
+\end{equation}
+where $e_{x^c, y^c}$, $f_{x^c, y^c}$, and $g_{x^c, y^c}$ are scalar constants found either through singular value decomposition or the pseudo-inverse. 
 
-Now in order to complete calibration, we...From these vectors, we can plot the relationship between any two parameters.  For instance, Fig.~\ref{Fig:3} plots the relationship between $P_u[x^c, y^c, k]$ and the unwrapped or fractional component of $P_h[x^c, y^c, k]$.  It is this relationship that we store in $LUT[x^c, y^c, \phi_u(x^c, y^c)]$ of eqn.~\eqref{eq:1.16}.  Specifically, Fig.~\ref{Fig:3}~(left) illustrates the phase relationships when the two phase terms derive from a single projector while Fig.~\ref{Fig:3}~(right) shows the arbitrary relationship found in our dual-projector system.  It should be noted that our look-up table approach can be applied to both. In fact, applying our approach to a traditional structured light scanner proved a reliable way to debug the source code.
 
->>>>>>> cfaf21c63a1be3e5ad71c3f4d912a0cbfc4c7607
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{figure}[!t]
   \includegraphics[width=\linewidth]{phase.png}
@@ -230,26 +243,6 @@ Our FPGA-based dual-projector Structured Light Illumination (SLI) system generat
    %\label{Fig:1}
    %\end{figure} 
 
-\begin{figure}
-\centering
-\begin{subfigure}{.5\textwidth}
-  \centering
-  %\includegraphics[width=.5\linewidth]{mojo.jpg}
-  \includegraphics[height=6cm, angle=90]{mojo.jpg}
-  \caption{A photo of the system}
-  \label{fig:sub1}
-\end{subfigure}%
-\begin{subfigure}{.5\textwidth}
-  \centering
-  %\includegraphics[width=.5\linewidth]{sysdgv2.png}
-   \includegraphics[height=8cm]{sysdgv3.png}
-  \caption{System diagram}
-  \label{fig:sub2}
-\end{subfigure}
-\caption{Our dual-projector system}
-\label{Fig:2}
-\end{figure}
-
 HDMI is the abbreviation of High-Definition Multimedia Interface, it is one of the most popular display interfaces. The newest release, HDMI Version 2.1 supports up to $10K$ video at $120 Hz$. A standard HDMI connector has 19 pins \cite{hdmi14}, Data channel 2, 1, 0 are mainly used to transfer red, green and blue components of the video, respectively. The HDMI interface specification does not only transfer video data, but also some auxiliary data. For example, audio data and packet headers may also be transmitted. The auxiliary data, video data as well as some control signals are encoded in data channel 2, 1, 0 and then digitally transmitted in serial. In between any two adjacent video periods, one or more data 'island' and control periods are inserted. 
 
 % Please add the following required packages to your document preamble:
@@ -277,21 +270,41 @@ HDMI is the abbreviation of High-Definition Multimedia Interface, it is one of t
 
 In HDMI, there are six important control signals: HSYNC, indicating the beginning and end of a row in a frame of video; VSYNC, indicating the beginning and end of a frame; CTL0~CTL3, indicating the data type of the following data period. The three data channels are transmitted through a differential signaling technology called Transition-Minimized Differential Signaling (TMDS) to reduce the impact of electromagnetic interference and enable high clock skew tolerance. %Another common application of TMDS is in the Digital Visual Interface (DVI).
 
+
+\begin{figure}
+\centering
+\begin{subfigure}{.5\textwidth}
+  \centering
+  %\includegraphics[width=.5\linewidth]{mojo.jpg}
+  \includegraphics[height=6cm, angle=90]{mojo.jpg}
+  \caption{A photo of the system}
+  \label{fig:sub1}
+\end{subfigure}%
+\begin{subfigure}{.5\textwidth}
+  \centering
+  %\includegraphics[width=.5\linewidth]{sysdgv2.png}
+   \includegraphics[height=8cm]{sysdgv3.png}
+  \caption{System diagram}
+  \label{fig:sub2}
+\end{subfigure}
+\caption{Our dual-projector system}
+\label{Fig:2}
+\end{figure}
+
 The 5 volt power signal is provided by the HDMI source or an external source, which after the HDMI sink reads the 5~volts signal, it immediately asserts the pin, Hot Plug Detect. Once the HDMI source detects the presence of a sink by the assertion of the Hot Plug Detect pin, it sends an $I^2C$-based command of a read request to the sink. The pins SCL and SDA make up the display data channel (DDC), which the Extended Display Identification Data (EDID) response is read over by the HDMI source, from the sink. The EDID is either 128 or 256 bytes long and contains various information related to the features of the display system. This includes, but is not limited to, manufacturer ID, serial number, week and year of manufacture, screen size, supported timing, etc.
+
 
 The pin CEC is used to add some advanced functionality to the HDMI system. Usually it is a remote control that issues different high-level commands to the devices connected by HDMI cables. CEC stands for Consumer Electronics Control, it is also a one-wire bus protocol, the implementation of CEC is optional, because not all the HDMI devices support this feature. Since HDMI 1.4, the previously reserved pin has become the HDMI Ethernet and Audio Return Channel (HEAC). While it is in audio return channel mode, only the HEAC+ line is used to transmit audio data; in HDMI Ethernet channel mode, the HEAC+ line pairs up with the HEAC- line as a differential signal to establish a high speed Ethernet communication.
 
-To obtain the uncommon 73.25~MHz pixel clock for $800\times 600$ pixel video at 120~Hz which cannot be generated by the Spartan 6 or the Mojo board, we utilize a programmable oscillator, the Si514. By configuring the internal registers through $I^2C$ bus, Si514 can generate any frequency from 100~kHz to 250~MHz with a tuning resolution of 0.026 ppb. Therefore, an $I^2C$ master controller was incorporated into the system.%..what parameters did you use to get the clock rate with this oscillator. 
 
-Now in order to linearize the projector to avoid the deleterious effects of gamma distortion~\cite{gamm10} on our projected PMP patterns, we use the EEPROM on the Mojo board to upload calibrated tone correction curves for our target projector.
-%..JUST SAY SOMETHING ABOUT HOW THE LUT IS PROGRAMMED OVER SERIAL COMMUNICATION WITH MICROCONTOLLER AND THAT IT IS READ DURING BOOT UP OF THE FPGA TO THE INTERNAL LUT INSIDE YOUR BIT FILE..
-This LUT can be hard-coded into the configuration file of the FPGA, but the drawback is that once the lookup table changes, the FPGA configuration file has to be changed. It is quite inconvenient especially when the system needs to be often applied to a different projector, because generating a new FPGA configuration file requires special development tool and takes more time. We devise an approach that the user stores the LUT in a separate EEPROM chip which can be erased and written by any computer via some general serial or USB tools, and the SPI master module in the FPGA reads the EEPROM every time the system  is powered on. With this approach, users can load new LUTs much faster and easier.
+The  firmware on the AVR (ATMega328P), written by the makers of the Mojo board, interfaces with PC software to facilitate the upload and configuration of the MojoV3's Spartan-6 FPGA. This open source firmware was modified to support an additional action -- LUT upload. When programming the Mojo board with a \texttt{.bit} file, the bit file is first sent over serial to the AVR, which then stores it to an SPI flash chip. After verification of the data, the AVR  configures the FPGA with the \texttt{.bit} file while reading the data back from FLASH. The AVR microcontroller also has 1k of EEPROM at the user's disposal. In order to add this LUT upload functionality to the Mojo board, the Arduino firware was modified to support reading 1024 byes over the PC serial connection and then storing it to the AVR's EEPROM. Changes were also made which utilized the SPI connections to the FPGA such that, after each power on and configuration of the Spartan-6 FPGA, the Mojo firmware would upload an additional 1024 bytes of LUT to the FPGA over SPI.
+
 
 The camera synchronization module not only controls the timing of the camera trigger, but also monitors the status of the camera. There are three wires that link the camera and the FPGA. They are $ENABLE$, $TRIGGER$, and the $TRIGGER\_READY$ signal. The $ENABLE$ and $TRIGGER\_READY$ are output signals from the camera that are programmable from the host PC. The $TRIGGER$ signal is an input signal to the camera that is controlled by the FPGA. Initially, the camera pulls the $ENABLE$ high to tell the FPGA that a new scan is about to start. Upon receiving ENABLE, the FPGA sends the first SLI pattern to the projector starting on the next $Vertical\_Sync$. At the end of this first sent video frame, the rising edge of the $Vertical\_Sync$ from the HDMI module is copied to the $TRIGGER$ to trigger the camera's first exposure.  The FPGA also increments the frame counter and starts sending the second frame in the SLI sequence to the projector.  Upon receiving the trigger, the camera delays its exposure to the point where the first frame begins displaying on the projector's spatial light modulator.  Because this first frame was only sent once, its maximum exposure must be less than the time between vertical syncs in the HDMI signal. 
 
 Now while exposing the sensor, the camera pulls its $TRIGGER\_READY$ low, telling the FPGA that no more triggers should be issued for the camera because the camera is busy processing the current exposure. During this period, the projector keeps displaying the same SLI pattern. Once an exposure is done, the $TRIGGER\_READY$ immediately goes high,  which tells the FPGA that the camera is ready for another exposure. So the rising edge of the following $Vertical\_Sync$ can be sent to $TRIGGER$ with the frame counter incremented inside the FPGA so that the next SLI pattern can be sent to the projector. From the PC side, the $TRIGGER\_READY$ is programmed by setting different values to the camera's parameters such as trigger delay and exposure time. Figure~\ref{Fig:7} briefly illustrates the synchronization between the camera and the projector for the cases of a fast or slow camera. 
 
-In the case of a fast camera with frame rate exceeding the HDMI frame rate, the camera is able to trigger on each and every vertical sync.  Hence, the resulting scanner runs at the maximum rate of the projectors.  For the slow camera that runs at say 90 fps, the trigger ready tells the projector to hold on to its triggers such that the camera is triggered on every second vertical sync.  That means that the scanner runs at a rate of 60 fps since this is 120/2 fps. Of course, it should be noted that using a camera with a 90 fps maximum frame rate, there are 85 Hz refresh rates in the HDMI specification.
+In the case of a fast camera with frame rate exceeding the HDMI frame rate, the camera is able to trigger on each and every vertical sync.  Hence, the resulting scanner runs at the maximum rate of the projectors.  For the slow camera that runs at say, 90 fps, the trigger ready tells the projector to hold on to its triggers such that the camera is triggered on every second vertical sync.  That means that the scanner runs at a rate of 60 fps since this is 120/2 fps. Of course, it should be noted that using a camera with a 90 fps maximum frame rate, there are 85 Hz refresh rates in the HDMI specification.
 
 \begin{figure}
 \centering
@@ -315,7 +328,7 @@ In the case of a fast camera with frame rate exceeding the HDMI frame rate, the 
 
 
 \section{Conclusions}
-In this paper, we have introduced a generalized frame work for building multi-projector structured light scanners. Specifically, we have developing an FPGA controller to drive two synchronized projectors with camera handshaking such that the projected pattern sequences run at an adjustable frame rate regulated by the camera's acquisition speed.  In addition to this hardware, we have also introduced a pattern scheme that allows multiple patterns to be superimposed on each other and separated by the processing of the captured images inside the CPU.  This disambiguation allows the projectors to be assembled in any arbitrary arrangement.  And using our described calibration technique, we can fuse the phase images from multiple projectors to acquire a cohesively fused phase image from which to derive depth. Future research will focus on integrating the FPGA engine inside the FPGA resources of an existing machine vision camera to create a camera that converts any HDMI projector into an instant structured light scanner.
+In this paper, we have introduced a generalized framework for building multi-projector structured light scanners. Specifically, we have developed an FPGA controller to drive two synchronized projectors with camera handshaking such that the projected pattern sequences run at an adjustable frame rate, regulated by the camera's acquisition speed.  In addition to this hardware, we have also introduced a pattern scheme that allows multiple patterns to be superimposed on each other and separated by the processing of the captured images inside the CPU.  This disambiguation allows the projectors to be assembled in any arbitrary arrangement. Using our described calibration technique, we can fuse the phase images from multiple projectors  and derive depth from a single cohesive phase image. Future research will focus on integrating the FPGA control logic into the existing FPGA resources of a machine vision camera, creating a machine vision sensing solution that converts any HDMI projector into an instant structured light scanner.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%%%% References %%%%%
